@@ -1,40 +1,40 @@
+# the only change that should exist in gnu-efi is the change in data.c where
+# some data structure members were set to NULL
 GNUEFIDIR = ../gnu-efi
+
 IMEDDIR = imed
 SRCDIR = src
 BUILDDIR = build
 LIBDIR = lib
 
-CC = x86_64-elf-gcc
-CFLAGS = -Iinc -I$(GNUEFIDIR)/inc -fpic -ffreestanding -fno-stack-protector \
-	 -fno-stack-check -mno-red-zone -fshort-wchar \
-	 -maccumulate-outgoing-args -I$(GNUEFIDIR)/inc/x86_64
+CC = clang
+CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
+         -mno-red-zone -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 \
+	 -I$(GNUEFIDIR)/inc/protocol -Iinc
 
 OBJS = $(IMEDDIR)/main.o
 
-LD = x86_64-elf-ld
-LDFLAGS = -shared -Bsymbolic -L$(LIBDIR) \
-	  -T$(GNUEFIDIR)/gnuefi/elf_x86_64_efi.lds \
-	  $(LIBDIR)/crt0-efi-x86_64.o $(OBJS) -lgnuefi -lefi
+LD = clang
+LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
+          -Wl,-subsystem:efi_application -fuse-ld=lld-link
 
 all:
 	make clean
 	make build
 	@ echo "target 'all' complete"
 
-build: $(BUILDDIR)/kernel.efi
-	@ echo "target 'build' complete"
-
 clean:
 	rm $(IMEDDIR)/* $(BUILDDIR)/*
 	@ echo "target 'clean' complete"
 
-$(BUILDDIR)/kernel.efi: $(BUILDDIR)/kernel.so
-	objcopy -j .text -j .sdata -j .data -j .dynamic -j .dynsym \
-		-j .rel -j .rela -j .rel.* -j .rela.* -j .reloc \
-		--target efi-app-x86_64 --subsystem=10 $^ $@
+build: $(BUILDDIR)/BOOTX64.EFI
+	@ echo "target 'build' complete"
 
-$(BUILDDIR)/kernel.so: $(OBJS)
-	$(LD) $(LDFLAGS) -o $@
+$(BUILDDIR)/BOOTX64.EFI: $(OBJS) $(IMEDDIR)/gnu-efi-data.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+$(IMEDDIR)/gnu-efi-data.o: $(GNUEFIDIR)/lib/data.c
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^

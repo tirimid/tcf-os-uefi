@@ -52,11 +52,14 @@ EFI_MEMORY_TYPE PoolAllocationType = EfiBootServicesData;
 // Unicode collation functions that are in use
 //
 
+/* this structure has been modified to allow proper compilation, do not change
+ * it unless you want to stop kernel from building
+ */
 EFI_UNICODE_COLLATION_INTERFACE   LibStubUnicodeInterface = {
-    LibStubStriCmp,
-    LibStubMetaiMatch,
-    LibStubStrLwrUpr,
-    LibStubStrLwrUpr,
+    NULL,   // LibStubStriCmp
+    NULL,   // LibStubMetaiMatch
+    NULL,   // LibStubStrLwrUpr
+    NULL,   // LibStubStrLwrUpr
     NULL,   // FatToStr
     NULL,   // StrToFat
     NULL    // SupportedLanguages
