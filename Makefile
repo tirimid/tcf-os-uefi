@@ -9,7 +9,7 @@ OVMFDIR = ovmf
 IMG = tcf-os-uefi.img
 
 EMU = qemu-system-x86_64
-EFLAGS = -cpu qemu64 -m 1G -drive file="$(BUILDDIR)/$(IMG)" -net none \
+EFLAGS = -cpu qemu64 -m 1G -net none \
 	 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE.fd" \
 	 -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS.fd"
 
@@ -29,7 +29,7 @@ build: $(BUILDDIR)/$(IMG)
 	@ echo "target 'build' complete"
 
 run: $(BUILDDIR)/$(IMG)
-	$(EMU) $(EFLAGS)
+	$(EMU) $(EFLAGS) -drive file=$^
 	@ echo "target 'run' complete"
 
 $(BUILDDIR)/$(IMG): $(IMEDDIR)/BOOTX64.EFI
