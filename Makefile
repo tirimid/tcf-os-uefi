@@ -1,7 +1,7 @@
 .ONESHELL:
 
-KERNELDIR = kernel
-KBUILDDIR = $(KERNELDIR)/build
+BOOTDIR = boot
+BBUILDDIR = $(BOOTDIR)/build
 IMEDDIR = imed
 BUILDDIR = build
 OVMFDIR = ovmf
@@ -19,7 +19,7 @@ all:
 	@ echo "target 'all' complete"
 
 clean:
-	cd $(KERNELDIR)
+	cd $(BOOTDIR)
 	make clean
 	cd ..
 	rm $(IMEDDIR)/* $(BUILDDIR)/*
@@ -39,10 +39,10 @@ $(BUILDDIR)/$(IMG): $(IMEDDIR)/BOOTX64.EFI
 	mmd -i $@ ::/EFI/BOOT
 	mcopy -i $@ $^ ::/EFI/BOOT
 
-$(IMEDDIR)/BOOTX64.EFI: $(KBUILDDIR)/BOOTX64.EFI
+$(IMEDDIR)/BOOTX64.EFI: $(BBUILDDIR)/BOOTX64.EFI
 	cp $^ $@
 
-$(KBUILDDIR)/BOOTX64.EFI:
-	cd $(KERNELDIR)
+$(BBUILDDIR)/BOOTX64.EFI:
+	cd $(BOOTDIR)
 	make build
 	cd ..

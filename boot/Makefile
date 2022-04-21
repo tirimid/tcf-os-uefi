@@ -5,18 +5,18 @@ GNUEFIDIR = ../gnu-efi
 IMEDDIR = imed
 SRCDIR = src
 BUILDDIR = build
-LIBDIR = lib
 
 CC = clang
 CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
          -mno-red-zone -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 \
-	 -I$(GNUEFIDIR)/inc/protocol -Iinc
+	 -I$(GNUEFIDIR)/inc/protocol -Iinc -std=c11
 
-OBJS = $(IMEDDIR)/main.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/files.o \
+       $(IMEDDIR)/text.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
-          -Wl,-subsystem:efi_application -fuse-ld=lld-link
+          -Wl,-subsystem:efi_application -fuse-ld=lld-link -std=c11
 
 all:
 	make clean
@@ -37,4 +37,7 @@ $(IMEDDIR)/gnu-efi-data.o: $(GNUEFIDIR)/lib/data.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $^
+
+$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
