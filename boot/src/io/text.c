@@ -2,36 +2,43 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "libc/string.h"
 
 #define LOG_PREFIX L"[ tcf-boot-uefi ]"
+#define PRINT_BUF_SIZE 512
+
+static wchar_t print_buf[PRINT_BUF_SIZE] = { L'\0' };
 
 void
 print(const wchar_t *s)
 {
-        ST->ConOut->OutputString(ST->ConOut, s);
+        wcscpy(print_buf, s); /* allows const string to be passed while still
+                               * getting rid of a warning
+                               */
+        ST->ConOut->OutputString(ST->ConOut, print_buf);
 }
 
 void
 print_line(const wchar_t *s)
 {
         print(s);
-        print(L"\r\n");
+        ST->ConOut->OutputString(ST->ConOut, L"\r\n");
 }
 
 void
 log_info(const wchar_t *s)
 {
-        print(LOG_PREFIX L" info: ");
+        ST->ConOut->OutputString(ST->ConOut, LOG_PREFIX L" info: ");
         print_line(s);
 }
 
 void
 log_error(const wchar_t *s)
 {
-        print(LOG_PREFIX L" error: ");
+        ST->ConOut->OutputString(ST->ConOut, LOG_PREFIX L" error: ");
         print_line(s);
         while (true) {
                 __asm__("cli\n"
                         "hlt\n");
-        };
+        }
 }

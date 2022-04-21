@@ -9,14 +9,14 @@ BUILDDIR = build
 CC = clang
 CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
          -mno-red-zone -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 \
-	 -I$(GNUEFIDIR)/inc/protocol -Iinc -std=c11
+	 -I$(GNUEFIDIR)/inc/protocol -Iinc -std=c11 -pedantic
 
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/files.o \
-       $(IMEDDIR)/text.o
+       $(IMEDDIR)/text.o $(IMEDDIR)/string.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
-          -Wl,-subsystem:efi_application -fuse-ld=lld-link -std=c11
+          -Wl,-subsystem:efi_application -fuse-ld=lld-link -std=c11 -pedantic
 
 all:
 	make clean
