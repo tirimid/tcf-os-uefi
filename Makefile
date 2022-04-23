@@ -5,6 +5,7 @@ BBUILDDIR = $(BOOTDIR)/build
 IMEDDIR = imed
 BUILDDIR = build
 OVMFDIR = ovmf
+OSFILESDIR = os-files
 
 IMG = tcf-os-uefi.img
 
@@ -32,7 +33,15 @@ run: $(BUILDDIR)/$(IMG)
 	$(EMU) $(EFLAGS) -drive file=$^
 	@ echo "target 'run' complete"
 
-$(BUILDDIR)/$(IMG): $(IMEDDIR)/BOOTX64.EFI
+# writes necessary OS files to disk image with only UEFI stuff currently
+$(BUILDDIR)/$(IMG): $(IMEDDIR)/$(IMG)
+	cp $^ $@
+	mmd -i $@ ::/sys
+	mcopy -i $@ $(OSFILESDIR)/sys/sys.cfg ::/sys
+	mmd -i $@ ::/uefi
+	mcopy -i $@ $(OSFILESDIR)/uefi/test.txt ::/uefi
+
+$(IMEDDIR)/$(IMG): $(IMEDDIR)/BOOTX64.EFI
 	dd if=/dev/zero of=$@ bs=1k count=1440
 	mformat -i $@ -f 1440 ::
 	mmd -i $@ ::/EFI

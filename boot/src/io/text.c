@@ -12,9 +12,7 @@ static wchar_t print_buf[PRINT_BUF_SIZE] = { L'\0' };
 void
 print(const wchar_t *s)
 {
-        wcscpy(print_buf, s); /* allows const string to be passed while still
-                               * getting rid of a warning
-                               */
+        wcscpy(print_buf, s); /* allow const string as argument in function */
         ST->ConOut->OutputString(ST->ConOut, print_buf);
 }
 
