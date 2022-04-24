@@ -16,5 +16,5 @@ init_boot(EFI_SYSTEM_TABLE *sys_table)
 const wchar_t *
 boot_version(void)
 {
-        return VERSION(0, 21, 4, 22);
+        return VERSION(0, 24, 4, 22);
 }

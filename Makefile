@@ -2,11 +2,14 @@
 
 BOOTDIR = boot
 BBUILDDIR = $(BOOTDIR)/build
+KERNELDIR = kernel
+KBUILDDIR = $(KERNELDIR)/build
 IMEDDIR = imed
 BUILDDIR = build
 OVMFDIR = ovmf
 OSFILESDIR = os-files
 
+KERNELELF = tcf-kernel.elf
 IMG = tcf-os-uefi.img
 
 EMU = qemu-system-x86_64
@@ -22,6 +25,8 @@ all:
 clean:
 	cd $(BOOTDIR)
 	make clean
+	cd ../$(KERNELDIR)
+	make clean
 	cd ..
 	rm $(IMEDDIR)/* $(BUILDDIR)/*
 	@ echo "target 'clean' complete"
@@ -33,11 +38,12 @@ run: $(BUILDDIR)/$(IMG)
 	$(EMU) $(EFLAGS) -drive file=$^
 	@ echo "target 'run' complete"
 
-# writes necessary OS files to disk image with only UEFI stuff currently
-$(BUILDDIR)/$(IMG): $(IMEDDIR)/$(IMG)
-	cp $^ $@
+# writes necessary OS files to disk image which has only UEFI stuff currently
+$(BUILDDIR)/$(IMG): $(IMEDDIR)/$(IMG) $(IMEDDIR)/$(KERNELELF)
+	cp $< $@
 	mmd -i $@ ::/sys
 	mcopy -i $@ $(OSFILESDIR)/sys/sys.cfg ::/sys
+	mcopy -i $@ $(IMEDDIR)/$(KERNELELF) ::/sys
 	mmd -i $@ ::/uefi
 	mcopy -i $@ $(OSFILESDIR)/uefi/test.txt ::/uefi
 
@@ -53,5 +59,13 @@ $(IMEDDIR)/BOOTX64.EFI: $(BBUILDDIR)/BOOTX64.EFI
 
 $(BBUILDDIR)/BOOTX64.EFI:
 	cd $(BOOTDIR)
+	make build
+	cd ..
+
+$(IMEDDIR)/$(KERNELELF): $(KBUILDDIR)/$(KERNELELF)
+	cp $^ $@
+
+$(KBUILDDIR)/$(KERNELELF):
+	cd $(KERNELDIR)
 	make build
 	cd ..

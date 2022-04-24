@@ -1,8 +1,10 @@
 #include "io/files.h"
 
 #include "libc/string.h"
+#include <stdint.h>
 
 #define FILE_NAME_BUF_SIZE 256
+#define FILE_INFO_BUF_SIZE 128
 
 EFI_FILE_HANDLE
 get_image_volume(EFI_HANDLE img_handle)
@@ -43,4 +45,16 @@ void
 close_file(EFI_FILE_HANDLE file)
 {
         file->Close(file);
+}
+
+/* file info is read into a very large buffer to ensure enough size */
+static uint8_t file_info_buf[FILE_INFO_BUF_SIZE];
+
+size_t
+file_size(EFI_FILE_HANDLE file)
+{
+        EFI_FILE_INFO *info = (EFI_FILE_INFO *)file_info_buf;
+        size_t buf_size = FILE_INFO_BUF_SIZE;
+        file->GetInfo(file, &GenericFileInfo, &buf_size, info);
+        return info->FileSize;
 }

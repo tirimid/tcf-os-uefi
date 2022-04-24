@@ -1,0 +1,35 @@
+IMEDDIR = imed
+SRCDIR = src
+BUILDDIR = build
+
+CC = clang
+CFLAGS = -std=c11 -pedantic -target x86_64-elf -Iinc -ffreestanding
+
+OBJS = $(IMEDDIR)/main.o
+
+LD = clang
+LDS = linker.ld
+LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static
+
+ELF = tcf-kernel.elf
+
+all:
+	make clean
+	make build
+	@ echo "target 'all' complete"
+
+clean:
+	rm $(IMEDDIR)/* $(BUILDDIR)/*
+	@ echo "target 'clean' complete"
+
+build: $(BUILDDIR)/$(ELF)
+	@ echo "target 'build' complete"
+
+$(BUILDDIR)/$(ELF): $(OBJS)
+	$(LD) $(LDFLAGS) -o $@ $^
+
+$(IMEDDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $^
+
+$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
+	$(CC) $(CFLAGS) -o $@ -c $^

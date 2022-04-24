@@ -18,4 +18,7 @@ read_file(EFI_FILE_HANDLE file, void *dst, size_t size);
 void
 close_file(EFI_FILE_HANDLE file);
 
+size_t
+file_size(EFI_FILE_HANDLE file);
+
 #endif

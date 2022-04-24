@@ -12,11 +12,11 @@ CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
 	 -I$(GNUEFIDIR)/inc/protocol -Iinc -std=c11 -pedantic
 
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/files.o \
-       $(IMEDDIR)/text.o $(IMEDDIR)/string.o
+       $(IMEDDIR)/text.o $(IMEDDIR)/string.o $(IMEDDIR)/pool.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
-          -Wl,-subsystem:efi_application -fuse-ld=lld-link -std=c11 -pedantic
+          -Wl,-subsystem:efi_application -fuse-ld=lld-link
 
 all:
 	make clean
