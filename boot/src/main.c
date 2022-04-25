@@ -9,11 +9,16 @@
 static void
 test_elf_file(EFI_HANDLE img_handle, const wchar_t *file_name)
 {
-        EFI_FILE_HANDLE vol = get_image_volume(img_handle);
-        EFI_FILE_HANDLE file = open_file(vol, file_name);
-        wchar_t *file_buf = alloc_pool_mem(file_size(file));
+        EFI_FILE_HANDLE vol;
+        EFI_FILE_HANDLE file;
+        wchar_t *file_buf;
+        const struct elf_header *hdr;
+        
+        vol = get_image_volume(img_handle);
+        file = open_file(vol, file_name);
+        file_buf = alloc_pool_mem(file_size(file));
         read_file(file, file_buf, file_size(file));
-        const struct elf_header *hdr = (const struct elf_header *)file_buf;
+        hdr = (const struct elf_header *)file_buf;
         if (is_elf_header_valid(hdr))
                 log_info(L"valid elf file");
         free_pool_mem(file_buf);

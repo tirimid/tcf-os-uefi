@@ -7,7 +7,9 @@ void *
 alloc_pool_mem(size_t size)
 {
         void *buf;
-        EFI_STATUS rc = BS->AllocatePool(PoolAllocationType, size, &buf);
+        EFI_STATUS rc;
+
+        rc = BS->AllocatePool(PoolAllocationType, size, &buf);
         return EFI_ERROR(rc) ? NULL : buf;
 }
 

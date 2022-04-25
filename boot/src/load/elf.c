@@ -58,6 +58,5 @@ enum elf_header_inst_set {
 bool
 is_elf_header_valid(const struct elf_header *elf_hdr)
 {
-        bool magic =
         return elf_hdr->inst_set == ELF_HEADER_INST_SET_X86_64;
 }
