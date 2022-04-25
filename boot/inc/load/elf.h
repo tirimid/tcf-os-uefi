@@ -2,20 +2,7 @@
 #define ELF_H_HZ99DeDOHatwSF1Ppse5AloYqQIHTMzA
 
 #include <stdint.h>
-
-enum elf_header_inst_set {
-        ELF_HEADER_INST_SET_NONE = 0x0,
-        ELF_HEADER_INST_SET_SPARC = 0x2,
-        ELF_HEADER_INST_SET_X86 = 0x3,
-        ELF_HEADER_INST_SET_MIPS = 0x8,
-        ELF_HEADER_INST_SET_POWERPC = 0x14,
-        ELF_HEADER_INST_SET_ARM = 0x28,
-        ELF_HEADER_INST_SET_SUPERH = 0x2a,
-        ELF_HEADER_INST_SET_IA_64 = 0x32,
-        ELF_HEADER_INST_SET_X86_64 = 0x3e,
-        ELF_HEADER_INST_SET_AARCH64 = 0xb7,
-        ELF_HEADER_INST_SET_RISC_V = 0xf3,
-};
+#include <stdbool.h>
 
 __attribute__((packed)) struct elf_header {
         uint32_t magic;
@@ -38,6 +25,9 @@ __attribute__((packed)) struct elf_header {
         uint16_t sect_hdr_table_entry_cnt;
         uint16_t names_sect_hdr_ind;
 };
+
+bool
+is_elf_header_valid(const struct elf_header *elf_hdr);
 
 __attribute__((packed)) struct elf_prog_header {
         uint32_t type;

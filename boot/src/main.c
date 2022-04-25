@@ -14,8 +14,8 @@ test_elf_file(EFI_HANDLE img_handle, const wchar_t *file_name)
         wchar_t *file_buf = alloc_pool_mem(file_size(file));
         read_file(file, file_buf, file_size(file));
         const struct elf_header *hdr = (const struct elf_header *)file_buf;
-        if (hdr->inst_set == ELF_HEADER_INST_SET_X86_64)
-                log_info(L"x86-64 elf file");
+        if (is_elf_header_valid(hdr))
+                log_info(L"valid elf file");
         free_pool_mem(file_buf);
         close_file(file);
 }

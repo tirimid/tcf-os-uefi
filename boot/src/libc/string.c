@@ -17,3 +17,14 @@ wcscpy(wchar_t *restrict dst, const wchar_t *restrict src)
         dst[i] = L'\0';
         return dst;
 }
+
+int
+memcmp(const uint8_t *restrict a, const uint8_t *restrict b, size_t size)
+{
+        for (size_t i = 0; i < size; ++i) {
+                if (*u_a > *u_b)
+                        return 1;
+                else if (*u_a < *u_b)
+                        return -1;
+        }
+}
