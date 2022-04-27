@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/* 64 bit variant */
 __attribute__((packed)) struct elf_header {
         uint32_t magic;
         uint8_t bits;
@@ -29,6 +30,7 @@ __attribute__((packed)) struct elf_header {
 bool
 is_elf_header_valid(const struct elf_header *elf_hdr);
 
+/* 64 bit variant */
 __attribute__((packed)) struct elf_prog_header {
         uint32_t type;
         uint32_t flags;
