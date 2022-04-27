@@ -1,15 +1,24 @@
 #include "mem/paging.h"
 
+#include <efi.h>
+#include <efilib.h>
+
 void *
-alloc_page(void)
+alloc_page(void *phys_addr)
 {
-        return NULL;
+        void *ptr = phys_addr;
+        BS->AllocatePages(AllocateAddress, EfiLoaderData, 1,
+                          (EFI_PHYSICAL_ADDRESS *)&ptr);
+        return ptr;
 }
 
 void *
-alloc_pages(size_t cnt)
+alloc_pages(void *phys_addr, size_t cnt)
 {
-        return NULL;
+        void *ptr = phys_addr;
+        BS->AllocatePages(AllocateAddress, EfiLoaderData, cnt,
+                          (EFI_PHYSICAL_ADDRESS *)&ptr);
+        return ptr;
 }
 
 void

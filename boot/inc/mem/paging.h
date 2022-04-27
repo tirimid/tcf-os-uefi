@@ -3,11 +3,13 @@
 
 #include <stddef.h>
 
-void *
-alloc_page(void);
+#define PAGE_SIZE 0x1000
 
 void *
-alloc_pages(size_t cnt);
+alloc_page(void *phys_addr);
+
+void *
+alloc_pages(void *phys_addr, size_t cnt);
 
 void
 free_page(const void *page);

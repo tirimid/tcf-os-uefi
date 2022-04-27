@@ -2,6 +2,8 @@
 #define ELF_H_HZ99DeDOHatwSF1Ppse5AloYqQIHTMzA
 
 #include <stddef.h>
+#include <efi.h>
+#include <efilib.h>
 
 enum elf_header_inst_set {
         ELF_HEADER_INST_SET_NONE = 0x0,
@@ -63,14 +65,9 @@ enum elf_header_type {
         ELF_HEADER_TYPE_CORE = 4,
 };
 
-struct loaded_elf_file {
-        void *text;
-        void *data;
-        void *bss;
-};
-
-struct loaded_elf_file
-load_elf_file(const wchar_t *file_name, enum elf_header_inst_set inst_set,
+/* returns entry point for elf file */
+void *
+load_elf_file(EFI_FILE_HANDLE file, enum elf_header_inst_set inst_set,
               enum elf_header_type type);
 
 #endif

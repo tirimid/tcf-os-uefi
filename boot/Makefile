@@ -13,7 +13,7 @@ CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
 
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/files.o \
        $(IMEDDIR)/text.o $(IMEDDIR)/string.o $(IMEDDIR)/pool.o \
-       $(IMEDDIR)/elf.o
+       $(IMEDDIR)/elf.o $(IMEDDIR)/paging.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \

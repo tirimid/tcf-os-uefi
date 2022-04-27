@@ -7,7 +7,7 @@
 #define FILE_INFO_BUF_SIZE 128
 
 EFI_FILE_HANDLE
-get_image_volume(EFI_HANDLE img_handle)
+image_volume(EFI_HANDLE img_handle)
 {
         EFI_LOADED_IMAGE *loaded_img;
         EFI_GUID lip_guid = EFI_LOADED_IMAGE_PROTOCOL_GUID;
@@ -35,10 +35,12 @@ open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name)
         return file;
 }
 
-void
-read_file(EFI_FILE_HANDLE file, void *dst, size_t size)
+void *
+read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset, size_t size)
 {
+        file->SetPosition(file, offset);
         file->Read(file, &size, dst);
+        return dst;
 }
 
 void
