@@ -14,22 +14,22 @@ LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static
 ELF = tcf-kernel.elf
 
 all:
-        make clean
-        make build
-        @ echo "target 'all' complete"
+	make clean
+	make build
+	@ echo "target 'all' complete"
 
 clean:
-        rm $(IMEDDIR)/* $(BUILDDIR)/*
-        @ echo "target 'clean' complete"
+	rm $(IMEDDIR)/* $(BUILDDIR)/*
+	@ echo "target 'clean' complete"
 
 build: $(BUILDDIR)/$(ELF)
-        @ echo "target 'build' complete"
+	@ echo "target 'build' complete"
 
 $(BUILDDIR)/$(ELF): $(OBJS)
-        $(LD) $(LDFLAGS) -o $@ $^
+	$(LD) $(LDFLAGS) -o $@ $^
 
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
-        $(CC) $(CFLAGS) -o $@ -c $^
+	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
-        $(CC) $(CFLAGS) -o $@ -c $^
+	$(CC) $(CFLAGS) -o $@ -c $^

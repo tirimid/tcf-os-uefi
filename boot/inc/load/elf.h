@@ -1,43 +1,76 @@
 #ifndef ELF_H_HZ99DeDOHatwSF1Ppse5AloYqQIHTMzA
 #define ELF_H_HZ99DeDOHatwSF1Ppse5AloYqQIHTMzA
 
-#include <stdint.h>
-#include <stdbool.h>
+#include <stddef.h>
 
-__attribute__((packed)) struct elf_header {
-        uint32_t magic;
-        uint8_t bits;
-        uint8_t endianness;
-        uint8_t hdr_ver;
-        uint8_t abi;
-        uint64_t _ignore;
-        uint16_t type;
-        uint16_t inst_set;
-        uint32_t elf_ver;
-        uint64_t prog_entry_pos;
-        uint64_t prog_hdr_table_pos;
-        uint64_t sect_hdr_table_pos;
-        uint32_t flags;
-        uint16_t hdr_size;
-        uint16_t prog_hdr_size;
-        uint16_t prog_hdr_table_entry_cnt;
-        uint16_t sect_hdr_size;
-        uint16_t sect_hdr_table_entry_cnt;
-        uint16_t names_sect_hdr_ind;
+enum elf_header_inst_set {
+        ELF_HEADER_INST_SET_NONE = 0x0,
+        ELF_HEADER_INST_SET_ATAT_WE_32100 = 0x1,
+        ELF_HEADER_INST_SET_SPARC = 0x2,
+        ELF_HEADER_INST_SET_X86 = 0x3,
+        ELF_HEADER_INST_SET_MOTOROLA_68000 = 0x4,
+        ELF_HEADER_INST_SET_MOTOROLA_88000 = 0x5,
+        ELF_HEADER_INST_SET_INTEL_MCU = 0x6,
+        ELF_HEADER_INST_SET_INTEL_80860 = 0x7,
+        ELF_HEADER_INST_SET_MIPS = 0x8,
+        ELF_HEADER_INST_SET_IBM_SYSTEM_370 = 0x9,
+        ELF_HEADER_INST_SET_MIPS_RS3000_LE = 0xa,
+        ELF_HEADER_INST_SET_HP_PA_RISC = 0xe,
+        ELF_HEADER_INST_SET_INTEL_80960 = 0x13,
+        ELF_HEADER_INST_SET_POWERPC = 0x14,
+        ELF_HEADER_INST_SET_POWERPC_64 = 0x15,
+        ELF_HEADER_INST_SET_S390 = 0x16,
+        ELF_HEADER_INST_SET_IBM_SPU_SPC = 0x17,
+        ELF_HEADER_INST_SET_NEC_V800 = 0x24,
+        ELF_HEADER_INST_SET_FUJITSU_FR20 = 0x25,
+        ELF_HEADER_INST_SET_TRW_RH_32 = 0x26,
+        ELF_HEADER_INST_SET_MOTOROLA_RCE = 0x27,
+        ELF_HEADER_INST_SET_ARM = 0x28,
+        ELF_HEADER_INST_SET_DIGITAL_ALPHA = 0x29,
+        ELF_HEADER_INST_SET_SUPERH = 0x2a,
+        ELF_HEADER_INST_SET_SPARC_VER_9 = 0x2b,
+        ELF_HEADER_INST_SET_SIEMENS_TRICORE_EMBEDDED = 0x2c,
+        ELF_HEADER_INST_SET_ARGONAUT_RISC_CORE = 0x2d,
+        ELF_HEADER_INST_SET_HITACHI_H8_300 = 0x2e,
+        ELF_HEADER_INST_SET_HITACHI_H8_300H = 0x2f,
+        ELF_HEADER_INST_SET_HITACHI_H8S = 0x30,
+        ELF_HEADER_INST_SET_HITACHI_H8_500 = 0x31,
+        ELF_HEADER_INST_SET_IA_64 = 0x32,
+        ELF_HEADER_INST_SET_STANFORD_MIPS_X = 0x33,
+        ELF_HEADER_INST_SET_MOTOROLA_COLDFIRE = 0x34,
+        ELF_HEADER_INST_SET_MOTOROLA_M68HC12 = 0x35,
+        ELF_HEADER_INST_SET_FUJITSU_MMA_MULTIMEDIA_ACCEL = 0x36,
+        ELF_HEADER_INST_SET_SIEMENS_PCP = 0x37,
+        ELF_HEADER_INST_SET_SONY_NCPU_EMBEDDED_RISC = 0x38,
+        ELF_HEADER_INST_SET_DENSO_NDR1 = 0x39,
+        ELF_HEADER_INST_SET_MOTOROLA_STAR_CORE = 0x3a,
+        ELF_HEADER_INST_SET_TOYOTA_ME16 = 0x3b,
+        ELF_HEADER_INST_SET_STMICROELECTRONICS_ST100 = 0x3c,
+        ELF_HEADER_INST_SET_AVDANCED_LOGIC_CORP_TINYJ_EMBEDDED = 0x3d,
+        ELF_HEADER_INST_SET_X86_64 = 0x3e,
+        ELF_HEADER_INST_SET_TMS320C6000 = 0x8c,
+        ELF_HEADER_INST_SET_MCST_ELBRUS_E2K = 0xaf,
+        ELF_HEADER_INST_SET_AARCH64 = 0xb7,
+        ELF_HEADER_INST_SET_RISC_V = 0xf3,
+        ELF_HEADER_INST_SET_BERKELEY_PACKET_FILTER = 0xf7,
+        ELF_HEADER_INST_SET_WDC_65C816 = 0x101,
 };
 
-bool
-is_elf_header_valid(const struct elf_header *elf_hdr);
-
-__attribute__((packed)) struct elf_prog_header {
-        uint32_t type;
-        uint32_t flags;
-        uint64_t file_offset;
-        uint64_t virt_addr;
-        uint64_t _ignore;
-        uint64_t size_file;
-        uint64_t size_mem;
-        uint64_t req_align;
+enum elf_header_type {
+        ELF_HEADER_TYPE_RELOCATABLE = 1,
+        ELF_HEADER_TYPE_EXECUTABLE = 2,
+        ELF_HEADER_TYPE_SHARED = 3,
+        ELF_HEADER_TYPE_CORE = 4,
 };
+
+struct loaded_elf_file {
+        void *text;
+        void *data;
+        void *bss;
+};
+
+struct loaded_elf_file
+load_elf_file(const wchar_t *file_name, enum elf_header_inst_set inst_set,
+              enum elf_header_type type);
 
 #endif

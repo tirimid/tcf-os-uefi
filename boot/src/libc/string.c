@@ -19,12 +19,12 @@ wcscpy(wchar_t *restrict dst, const wchar_t *restrict src)
 }
 
 int
-memcmp(const uint8_t *restrict a, const uint8_t *restrict b, size_t size)
+memcmp(const void *a, const void *b, size_t size)
 {
         for (size_t i = 0; i < size; ++i) {
-                if (a[i] > b[i])
+                if (*((const uint8_t *)a + i) > *((const uint8_t *)b + i))
                         return 1;
-                else if (a[i] < b[i])
+                else if (*((const uint8_t *)a + i) < *((const uint8_t *)b + i))
                         return -1;
         }
         return 0;
