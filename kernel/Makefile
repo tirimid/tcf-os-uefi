@@ -1,17 +1,21 @@
+COMMONDIR = ../common
+
 IMEDDIR = imed
 SRCDIR = src
+INCDIR = inc
 BUILDDIR = build
 
 CC = clang
-CFLAGS = -std=c11 -pedantic -target x86_64-elf -Iinc -ffreestanding
+CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
+	 -I$(COMMONDIR)/inc
 
-OBJS = $(IMEDDIR)/main.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o
 
 LD = clang
 LDS = linker.ld
 LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static
 
-ELF = tcf-kernel.elf
+ELF = kernel.elf
 
 all:
 	make clean

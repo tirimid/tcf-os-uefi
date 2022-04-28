@@ -9,7 +9,7 @@ BUILDDIR = build
 OVMFDIR = ovmf
 OSFILESDIR = os-files
 
-KERNELELF = tcf-kernel.elf
+KERNELELF = kernel.elf
 IMG = tcf-os-uefi.img
 
 EMU = qemu-system-x86_64
