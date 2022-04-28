@@ -13,7 +13,7 @@ OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o
 
 LD = clang
 LDS = linker.ld
-LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static
+LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static -e kernel_main
 
 ELF = kernel.elf
 

@@ -21,7 +21,7 @@ efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
 {
         init_boot(sys_table);
         log_info(L"entering kernel...");
-        __attribute__((sysv_abi)) int (*kernel_entry)(const struct boot_info *)
+        __attribute__((ms_abi)) int (*kernel_entry)(const struct boot_info *)
                 = (int (*)(const struct boot_info *))load_kernel(img_handle);
         struct boot_info boot_info = retrieve_boot_info();
         exit_boot(img_handle);
