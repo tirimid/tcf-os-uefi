@@ -10,7 +10,7 @@ CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
 	 -I$(COMMONDIR)/inc
 
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/gfx.o \
-       $(IMEDDIR)/string.o
+       $(IMEDDIR)/string.o $(IMEDDIR)/psf.o
 
 LD = clang
 LDS = linker.ld

@@ -23,7 +23,7 @@ efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
         log_info(L"entering kernel...");
         __attribute__((ms_abi)) int (*kernel_entry)(const struct boot_info *)
                 = (int (*)(const struct boot_info *))load_kernel(img_handle);
-        struct boot_info boot_info = retrieve_boot_info();
+        struct boot_info boot_info = retrieve_boot_info(img_handle);
         exit_boot(img_handle);
         kernel_entry(&boot_info);
         return EFI_SUCCESS;

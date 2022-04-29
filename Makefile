@@ -44,6 +44,7 @@ $(BUILDDIR)/$(IMG): $(IMEDDIR)/$(IMG) $(IMEDDIR)/$(KERNELELF)
 	mmd -i $@ ::/sys
 	mcopy -i $@ $(OSFILESDIR)/sys/sys.cfg ::/sys
 	mcopy -i $@ $(IMEDDIR)/$(KERNELELF) ::/sys
+	mcopy -i $@ $(OSFILESDIR)/sys/tamsyn-8x16-bold.psf ::/sys
 	mmd -i $@ ::/uefi
 	mcopy -i $@ $(OSFILESDIR)/uefi/test.txt ::/uefi
 

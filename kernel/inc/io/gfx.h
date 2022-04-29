@@ -7,9 +7,6 @@
 void
 init_gfx(const struct frame_buf *fb_in_use);
 
-/* color is written to memory in little endian way, so members are in a
- * reversed order here
- */
 struct __attribute__((packed)) color {
         uint8_t b;
         uint8_t g;

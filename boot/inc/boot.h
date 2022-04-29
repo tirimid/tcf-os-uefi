@@ -16,6 +16,6 @@ void
 exit_boot(EFI_HANDLE img_handle);
 
 struct boot_info
-retrieve_boot_info(void);
+retrieve_boot_info(EFI_HANDLE img_handle);
 
 #endif
