@@ -9,7 +9,8 @@ CC = clang
 CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
 	 -I$(COMMONDIR)/inc
 
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/gfx.o \
+       $(IMEDDIR)/string.o
 
 LD = clang
 LDS = linker.ld
