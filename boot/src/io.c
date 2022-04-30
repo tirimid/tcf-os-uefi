@@ -39,6 +39,7 @@ log_error(const wchar_t *s)
 {
         ST->ConOut->OutputString(ST->ConOut, LOG_PREFIX L" error: ");
         print_line(s);
+
         while (true) {
                 __asm__("cli\n"
                         "hlt\n");
@@ -50,13 +51,19 @@ image_volume(EFI_HANDLE img_handle)
 {
         EFI_LOADED_IMAGE *loaded_img;
         EFI_GUID lip_guid = EFI_LOADED_IMAGE_PROTOCOL_GUID;
+
         BS->HandleProtocol(img_handle, &lip_guid, (void **)&loaded_img);
+        
         EFI_GUID fs_guid = EFI_SIMPLE_FILE_SYSTEM_PROTOCOL_GUID;
         EFI_FILE_IO_INTERFACE *vol_iface;
+        
         BS->HandleProtocol(loaded_img->DeviceHandle, &fs_guid,
                            (void **)&vol_iface);
+        
         EFI_FILE_HANDLE vol;
+        
         vol_iface->OpenVolume(vol_iface, &vol);
+        
         return vol;
 }
 
@@ -65,12 +72,14 @@ static wchar_t file_name_buf[FILE_NAME_BUF_SIZE] = { L'\0' };
 EFI_FILE_HANDLE
 open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name)
 {
-        wcscpy(file_name_buf, file_name); /* buffer is used to allow const
-                                           * file_name argument
-                                           */
+        /* buffer is used to allow const file_name argument */
+        wcscpy(file_name_buf, file_name);
+        
         EFI_FILE_HANDLE file;
+        
         vol->Open(vol, &file, file_name_buf, EFI_FILE_MODE_READ,
                   EFI_FILE_READ_ONLY | EFI_FILE_HIDDEN | EFI_FILE_SYSTEM);
+        
         return file;
 }
 
@@ -79,6 +88,7 @@ read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset, size_t size)
 {
         file->SetPosition(file, offset);
         file->Read(file, &size, dst);
+
         return dst;
 }
 
@@ -96,7 +106,9 @@ file_size(EFI_FILE_HANDLE file)
 {
         EFI_FILE_INFO *info = (EFI_FILE_INFO *)file_info_buf;
         size_t buf_size = FILE_INFO_BUF_SIZE;
+
         file->GetInfo(file, &GenericFileInfo, &buf_size, info);
+        
         return info->FileSize;
 }
 
@@ -111,12 +123,17 @@ struct psf_font
 read_psf_font_file(EFI_FILE_HANDLE file)
 {
         struct psf_font font;
+        
         read_file(file, &font, 0, sizeof(font.hdr));
+        
         if (!is_psf_font_header_valid(&font.hdr))
                 log_error(L"read_psf_font_file(): read invalid font header");
+        
         size_t glyph_buf_size = font.hdr.glyph_bytes * font.hdr.glyph_cnt;
+        
         font.glyph_buf = alloc_pool_mem(glyph_buf_size);
         read_file(file, font.glyph_buf, sizeof(font.hdr), glyph_buf_size);
+        
         return font;
 }
 
@@ -137,9 +154,9 @@ struct __attribute__((packed)) elf_header {
         uint32_t flags;
         uint16_t hdr_size;
         uint16_t prog_hdr_size;
-        uint16_t prog_hdr_table_entry_cnt;
+        uint16_t prog_hdr_cnt;
         uint16_t sect_hdr_size;
-        uint16_t sect_hdr_table_entry_cnt;
+        uint16_t sect_hdr_cnt;
         uint16_t names_sect_hdr_ind;
 };
 
@@ -150,6 +167,7 @@ is_elf_header_valid(const struct elf_header *elf_hdr,
 {
         int magic_cmp = memcmp(ELF_HEADER_MAGIC,
                                (const char *)&elf_hdr->magic, 4);
+
         return magic_cmp == 0 && elf_hdr->inst_set == inst_set
                && elf_hdr->type == type;
 }
@@ -174,52 +192,38 @@ struct __attribute__((packed)) elf_prog_header {
         uint64_t req_align;
 };
 
-static inline struct elf_header
-file_elf_header(EFI_FILE_HANDLE file)
-{
-        struct elf_header hdr;
-        read_file(file, &hdr, 0, sizeof(hdr));
-        return hdr;
-}
-
-/* returned resource must be freed */
-static struct elf_prog_header *
-file_elf_prog_headers(EFI_FILE_HANDLE file, const struct elf_header *elf_hdr)
-{
-        size_t prog_hdrs_size = elf_hdr->prog_hdr_table_entry_cnt
-                                * elf_hdr->prog_hdr_size;
-        struct elf_prog_header *hdrs = alloc_pool_mem(prog_hdrs_size);
-        read_file(file, hdrs, elf_hdr->prog_hdr_table_pos, prog_hdrs_size);
-        return hdrs;
-}
-
-static void
-load_elf_prog_header(EFI_FILE_HANDLE file,
-                     const struct elf_prog_header *prog_hdr)
-{
-        switch (prog_hdr->type) {
-        case ELF_PROG_HEADER_TYPE_LOAD:;
-                size_t page_cnt = (prog_hdr->size_mem) / PAGE_SIZE;
-                void *hdr_addr = alloc_pages((void *)prog_hdr->virt_addr,
-                                             page_cnt);
-                read_file(file, hdr_addr, prog_hdr->file_offset,
-                          prog_hdr->size_file);
-                break;
-        }
-}
-
 /* returns entry point for elf file */
 void *
 load_elf_file(EFI_FILE_HANDLE file, enum elf_header_inst_set inst_set,
               enum elf_header_type type)
 {
-        struct elf_header elf_hdr = file_elf_header(file);
+        struct elf_header elf_hdr;
+       
+        read_file(file, &elf_hdr, 0, sizeof(elf_hdr));
+        
         if (!is_elf_header_valid(&elf_hdr, inst_set, type))
                 log_error(L"load_elf_file(): invalid elf header");
-        struct elf_prog_header *prog_hdrs = file_elf_prog_headers(file,
-                                                                  &elf_hdr);
-        for (int i = 0; i < elf_hdr.prog_hdr_table_entry_cnt; ++i)
-                load_elf_prog_header(file, &prog_hdrs[i]);
+
+        size_t prog_hdrs_size = elf_hdr.prog_hdr_cnt * elf_hdr.prog_hdr_size;
+        struct elf_prog_header *prog_hdrs = alloc_pool_mem(prog_hdrs_size);
+        
+        read_file(file, prog_hdrs, elf_hdr.prog_hdr_table_pos, prog_hdrs_size);
+
+        for (int i = 0; i < elf_hdr.prog_hdr_cnt; ++i) {
+                switch (prog_hdrs[i].type) {
+                case ELF_PROG_HEADER_TYPE_LOAD:;
+                        size_t page_cnt = (prog_hdrs[i].size_mem) / PAGE_SIZE;
+                        void *hdr_virt_addr = (void *)prog_hdrs[i].virt_addr;
+                        void *hdr_addr = alloc_pages(hdr_virt_addr, page_cnt);
+
+                        read_file(file, hdr_addr, prog_hdrs[i].file_offset,
+                                  prog_hdrs[i].size_file);
+                                  
+                        break;
+                }
+        }
+        
         free_pool_mem(prog_hdrs);
+        
         return (void *)elf_hdr.prog_entry_pos;
 }

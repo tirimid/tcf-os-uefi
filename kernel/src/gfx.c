@@ -16,6 +16,7 @@ draw_pixel(int x, int y, struct color col)
 {
         struct color *dst = (struct color *)frame_buf.base
                             + frame_buf.scanline_pixels * y + x;
+
         col._ignore = 255;
         *dst = col;
 }
@@ -34,7 +35,10 @@ draw_hollow_box(int x, int y, int w, int h, struct color col)
 {
         for (int i = x; i < x + w; ++i) {
                 for (int j = y; j < y + h; ++j) {
-                        if (i == x || i == x + w || j == y || j == y + h)
+                        bool should_draw = i == x || i == x + w - 1 || j == y
+                                           || j == y + h - 1;
+
+                        if (should_draw)
                                 draw_pixel(i, j, col);
                 }
         }
@@ -45,6 +49,7 @@ clear_screen(struct color col)
 {
         uint64_t q = *(const uint64_t *)&col << 32 | *(const uint64_t *)&col;
         size_t writes = frame_buf.res_horiz * frame_buf.res_vert / 2;
+
         fast_memset(frame_buf.base, q, writes);
 }
 
@@ -56,22 +61,18 @@ init_psf(const struct psf_font *font_in_use)
         psf_font = *font_in_use;
 }
 
-static inline bool
-is_psf_glyph_masked(const uint8_t *glyph, int i, int j)
-{
-        int byte = j * psf_font.hdr.width / 8;
-        uint8_t mask = 1 << 7 >> i % 8;
-        return (glyph[byte] & mask) > 0;
-}
-
 void
 draw_psf_glyph(int x, int y, wchar_t c, struct color col)
 {
         const uint8_t *glyph
                 = &psf_font.glyph_buf[c * psf_font.hdr.glyph_bytes];
+
         for (int j = 0; j < psf_font.hdr.height; ++j) {
                 for (int i = 0; i < psf_font.hdr.width; ++i) {
-                        if (is_psf_glyph_masked(glyph, i , j))
+                        int glyph_byte = j * psf_font.hdr.width / 8;
+                        uint8_t bitmask = 1 << 7 >> i % 8;
+
+                        if ((glyph[glyph_byte] & bitmask) > 0)
                                 draw_pixel(x + i, y + j, col);
                 }
         }
