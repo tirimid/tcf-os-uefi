@@ -1,9 +1,41 @@
-#ifndef ELF_H_HZ99DeDOHatwSF1Ppse5AloYqQIHTMzA
-#define ELF_H_HZ99DeDOHatwSF1Ppse5AloYqQIHTMzA
+#ifndef IO_H_O30YjnfO4CFNv4goYuOzmUebmlFMqHac
+#define IO_H_O30YjnfO4CFNv4goYuOzmUebmlFMqHac
 
-#include <stddef.h>
 #include <efi.h>
 #include <efilib.h>
+#include <stddef.h>
+#include "gfxtypes.h"
+
+void
+print(const wchar_t *s);
+
+void
+print_line(const wchar_t *s);
+
+void
+log_info(const wchar_t *s);
+
+void
+log_error(const wchar_t *s);
+
+EFI_FILE_HANDLE
+image_volume(EFI_HANDLE img_handle);
+
+EFI_FILE_HANDLE
+open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name);
+
+void *
+read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset, size_t size);
+
+void
+close_file(EFI_FILE_HANDLE file);
+
+size_t
+file_size(EFI_FILE_HANDLE file);
+
+/* buffer of psf font must be freed after use */
+struct psf_font
+read_psf_font_file(EFI_FILE_HANDLE file);
 
 enum elf_header_inst_set {
         ELF_HEADER_INST_SET_NONE = 0x0,

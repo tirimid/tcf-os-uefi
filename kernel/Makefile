@@ -1,4 +1,5 @@
 COMMONDIR = ../common
+LIBCDIR = ../libc
 
 IMEDDIR = imed
 SRCDIR = src
@@ -7,10 +8,10 @@ BUILDDIR = build
 
 CC = clang
 CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
-	 -I$(COMMONDIR)/inc
+	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/gfx.o \
-       $(IMEDDIR)/string.o $(IMEDDIR)/psf.o
+       $(IMEDDIR)/string.o
 
 LD = clang
 LDS = linker.ld
@@ -36,5 +37,5 @@ $(BUILDDIR)/$(ELF): $(OBJS)
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
-$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
+$(IMEDDIR)/%.o: $(LIBCDIR)/src/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^

@@ -1,9 +1,7 @@
 #include <efi.h>
 #include <efilib.h>
 #include "boot.h"
-#include "io/files.h"
-#include "io/text.h"
-#include "load/elf.h"
+#include "io.h"
 
 void *
 load_kernel(EFI_HANDLE img_handle)

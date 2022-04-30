@@ -1,7 +1,7 @@
-#include "io/gop.h"
+#include "gfx.h"
 
 #include <efi.h>
-#include "io/text.h"
+#include "io.h"
 #include <efilib.h>
 
 struct frame_buf

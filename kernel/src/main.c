@@ -1,7 +1,6 @@
 #include "kernel.h"
 #include "boottypes.h"
-#include "io/gfx.h"
-#include "io/psf.h"
+#include "gfx.h"
 
 __attribute__((ms_abi)) int
 kernel_main(const struct boot_info *info)

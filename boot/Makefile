@@ -2,6 +2,7 @@
 # some data structure members were set to NULL
 GNUEFIDIR = ../gnu-efi
 COMMONDIR = ../common
+LIBCDIR = ../libc
 
 IMEDDIR = imed
 SRCDIR = src
@@ -12,11 +13,10 @@ CC = clang
 CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
 	 -mno-red-zone -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 \
 	 -I$(GNUEFIDIR)/inc/protocol -I$(INCDIR) -std=c11 -pedantic \
-	 -I$(COMMONDIR)/inc
+	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/files.o \
-       $(IMEDDIR)/text.o $(IMEDDIR)/string.o $(IMEDDIR)/pool.o \
-       $(IMEDDIR)/elf.o $(IMEDDIR)/paging.o $(IMEDDIR)/gop.o $(IMEDDIR)/psf.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/io.o $(IMEDDIR)/mem.o \
+       $(IMEDDIR)/gfx.o $(IMEDDIR)/string.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
@@ -43,5 +43,5 @@ $(IMEDDIR)/gnu-efi-data.o: $(GNUEFIDIR)/lib/data.c
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
-$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
+$(IMEDDIR)/%.o: $(LIBCDIR)/src/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^

@@ -1,5 +1,5 @@
-#ifndef PAGING_H_aIUR1xkuEFGQiIVZrHEIatoFhtIu6k7e
-#define PAGING_H_aIUR1xkuEFGQiIVZrHEIatoFhtIu6k7e
+#ifndef MEM_H_jYz6n65pkgY8AOq8SpFuTXJDxDoKDwVU
+#define MEM_H_jYz6n65pkgY8AOq8SpFuTXJDxDoKDwVU
 
 #include <stddef.h>
 
@@ -16,5 +16,11 @@ free_page(const void *page);
 
 void
 free_pages(const void *page, size_t cnt);
+
+void *
+alloc_pool_mem(size_t size);
+
+void
+free_pool_mem(void *buf);
 
 #endif

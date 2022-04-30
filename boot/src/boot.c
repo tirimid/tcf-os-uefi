@@ -1,10 +1,8 @@
 #include "boot.h"
 
-#include "io/text.h"
 #include "defs.h"
-#include "io/gop.h"
-#include "io/files.h"
-#include "io/psf.h"
+#include "io.h"
+#include "gfx.h"
 
 void
 init_boot(EFI_SYSTEM_TABLE *sys_table)
@@ -37,6 +35,6 @@ retrieve_boot_info(EFI_HANDLE img_handle)
                                               L"sys\\tamsyn-8x16-bold.psf");
         return (struct boot_info){
                 .frame_buf = current_frame_buf(),
-                .font = read_psf_font(font_file),
+                .font = read_psf_font_file(font_file),
         };
 }

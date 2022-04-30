@@ -1,8 +1,7 @@
 #include "kernel.h"
 
 #include <stdbool.h>
-#include "io/gfx.h"
-#include "io/psf.h"
+#include "gfx.h"
 
 void
 init_kernel(const struct boot_info *info)

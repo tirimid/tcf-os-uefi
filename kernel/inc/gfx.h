@@ -21,6 +21,15 @@ void
 draw_box(int x, int y, int w, int h, struct color col);
 
 void
+draw_hollow_box(int x, int y, int w, int h, struct color col);
+
+void
 clear_screen(struct color col);
+
+void
+init_psf(const struct psf_font *font_in_use);
+
+void
+draw_psf_glyph(int x, int y, wchar_t c, struct color col);
 
 #endif
