@@ -15,8 +15,10 @@ CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
 	 -I$(GNUEFIDIR)/inc/protocol -I$(INCDIR) -std=c11 -pedantic \
 	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/io.o $(IMEDDIR)/mem.o \
-       $(IMEDDIR)/gfx.o $(IMEDDIR)/string.o
+LIBCOBJS = $(IMEDDIR)/lcstring.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/pool.o \
+       $(IMEDDIR)/paging.o $(IMEDDIR)/text.o $(IMEDDIR)/rdftype.o \
+       $(IMEDDIR)/files.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
@@ -34,13 +36,16 @@ clean:
 build: $(BUILDDIR)/BOOTX64.EFI
 	@ echo "target 'build' complete"
 
-$(BUILDDIR)/BOOTX64.EFI: $(OBJS) $(IMEDDIR)/gnu-efi-data.o
+$(BUILDDIR)/BOOTX64.EFI: $(OBJS) $(IMEDDIR)/gnu-efi-data.o $(LIBCOBJS)
 	$(LD) $(LDFLAGS) -o $@ $^
 
 $(IMEDDIR)/gnu-efi-data.o: $(GNUEFIDIR)/lib/data.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $^
+
+$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(IMEDDIR)/%.o: $(LIBCDIR)/src/%.c

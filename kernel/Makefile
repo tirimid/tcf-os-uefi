@@ -10,8 +10,10 @@ CC = clang
 CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
 	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/gfx.o \
-       $(IMEDDIR)/string.o $(IMEDDIR)/paging.o $(IMEDDIR)/util.o
+LIBCOBJS = $(IMEDDIR)/lcstring.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/pgalloc.o \
+       $(IMEDDIR)/paging.o $(IMEDDIR)/paging.o $(IMEDDIR)/psf.o \
+       $(IMEDDIR)/gfx.o
 
 LD = clang
 LDS = linker.ld
@@ -31,10 +33,16 @@ clean:
 build: $(BUILDDIR)/$(ELF)
 	@ echo "target 'build' complete"
 
-$(BUILDDIR)/$(ELF): $(OBJS)
+$(BUILDDIR)/$(ELF): $(OBJS) $(LIBCOBJS)
 	$(LD) $(LDFLAGS) -o $@ $^
 
 $(IMEDDIR)/%.o: $(SRCDIR)/%.c
+	$(CC) $(CFLAGS) -o $@ -c $^
+
+$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
+	$(CC) $(CFLAGS) -o $@ -c $^
+
+$(IMEDDIR)/%.o: $(SRCDIR)/*/*/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
 $(IMEDDIR)/%.o: $(LIBCDIR)/src/%.c

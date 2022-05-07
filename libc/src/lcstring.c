@@ -1,4 +1,4 @@
-#include "string.h"
+#include "lcstring.h"
 
 void *
 memset(void *dst, uint8_t b, size_t size)

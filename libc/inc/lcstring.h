@@ -1,5 +1,5 @@
-#ifndef STRING_H_MRClSOj8reAg96xbJguU7b59e3ZFtdbf
-#define STRING_H_MRClSOj8reAg96xbJguU7b59e3ZFtdbf
+#ifndef LCSTRING_H_MRClSOj8reAg96xbJguU7b59e3ZFtdbf
+#define LCSTRING_H_MRClSOj8reAg96xbJguU7b59e3ZFtdbf
 
 #include <stddef.h>
 #include <stdint.h>

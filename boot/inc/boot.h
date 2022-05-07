@@ -4,13 +4,10 @@
 #include <efi.h>
 #include <efilib.h>
 #include <stddef.h>
-#include "boottypes.h"
+#include "comboot.h"
 
 void
 init_boot(EFI_SYSTEM_TABLE *sys_table);
-
-const wchar_t *
-boot_version(void);
 
 void
 exit_boot(EFI_HANDLE img_handle);
