@@ -8,11 +8,10 @@
 #include "lcstring.h"
 
 /* buffer of psf font must be freed after use */
-struct psf_font
-read_psf_font_file(EFI_FILE_HANDLE file)
+struct psf_font read_psf_font_file(EFI_FILE_HANDLE file)
 {
         struct psf_font font;
-        
+
         read_file(file, &font, 0, sizeof(font.hdr));
         
         if (font.hdr.magic != 0x864ab572)
@@ -71,12 +70,10 @@ struct __attribute__((packed)) elf_prog_header {
 };
 
 /* returns entry point for elf file */
-void *
-load_elf_file(EFI_FILE_HANDLE file, enum elf_header_inst_set inst_set,
-              enum elf_header_type type)
+void *load_elf_file(EFI_FILE_HANDLE file, enum elf_header_inst_set inst_set,
+                    enum elf_header_type type)
 {
         struct elf_header elf_hdr;
-       
         read_file(file, &elf_hdr, 0, sizeof(elf_hdr));
 
         bool hdr_valid = elf_hdr.inst_set == inst_set && elf_hdr.type == type

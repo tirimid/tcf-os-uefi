@@ -6,8 +6,7 @@
 #include "io/files.h"
 #include "io/rdftype.h"
 
-void
-init_boot(EFI_SYSTEM_TABLE *sys_table)
+void init_boot(EFI_SYSTEM_TABLE *sys_table)
 {
         ST = sys_table;
         BS = sys_table->BootServices;
@@ -15,15 +14,13 @@ init_boot(EFI_SYSTEM_TABLE *sys_table)
         log_info(L"initializing bootloader...");
 }
 
-void
-exit_boot(EFI_HANDLE img_handle)
+void exit_boot(EFI_HANDLE img_handle)
 {
         log_info(L"exiting boot services...");
         BS->ExitBootServices(img_handle, 0);
 }
 
-struct boot_info
-retrieve_boot_info(EFI_HANDLE img_handle)
+struct boot_info retrieve_boot_info(EFI_HANDLE img_handle)
 {
         EFI_FILE_HANDLE vol = image_volume(img_handle);
         EFI_FILE_HANDLE font_file = open_file(vol,

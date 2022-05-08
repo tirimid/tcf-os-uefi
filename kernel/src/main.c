@@ -3,8 +3,7 @@
 #include "comboot.h"
 #include "io/gfx/gfx.h"
 
-__attribute__((ms_abi)) int
-kernel_main(const struct boot_info *info)
+__attribute__((ms_abi)) int kernel_main(const struct boot_info *info)
 {
         init_kernel(info);
 

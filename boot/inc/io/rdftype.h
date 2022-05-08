@@ -6,8 +6,7 @@
 #include "comgfx.h"
 
 /* buffer of psf font must be freed after use */
-struct psf_font
-read_psf_font_file(EFI_FILE_HANDLE file);
+struct psf_font read_psf_font_file(EFI_FILE_HANDLE file);
 
 enum elf_header_inst_set {
         ELF_HEADER_INST_SET_NONE = 0x0,
@@ -70,8 +69,7 @@ enum elf_header_type {
 };
 
 /* returns entry point for elf file */
-void *
-load_elf_file(EFI_FILE_HANDLE file, enum elf_header_inst_set inst_set,
-              enum elf_header_type type);
+void *load_elf_file(EFI_FILE_HANDLE file, enum elf_header_inst_set inst_set,
+                    enum elf_header_type type);
 
 #endif

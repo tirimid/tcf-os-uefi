@@ -1,7 +1,6 @@
-#include "util.h"
+#include "util/bitmap.h"
 
-bool
-bitmap_bit(const struct bitmap *bm, size_t ind)
+bool bitmap_bit(const struct bitmap *bm, size_t ind)
 {
         size_t byte = ind / 8;
         size_t bit = ind % 8;
@@ -10,8 +9,7 @@ bitmap_bit(const struct bitmap *bm, size_t ind)
         return (bm->data[byte] & mask) > 0;
 }
 
-void
-set_bitmap_bit(struct bitmap *bm, size_t ind, bool state)
+void set_bitmap_bit(struct bitmap *bm, size_t ind, bool state)
 {
         size_t byte = ind / 8;
         size_t bit = ind % 8;
@@ -21,4 +19,9 @@ set_bitmap_bit(struct bitmap *bm, size_t ind, bool state)
         
         if (state)
                 bm->data[byte] |= mask;
+}
+
+size_t bitmap_size_bytes(const struct bitmap *bm)
+{
+        return ceil((float)bm->size_bits / 8.0f);
 }

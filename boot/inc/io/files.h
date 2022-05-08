@@ -5,16 +5,14 @@
 #include <efilib.h>
 #include <stddef.h>
 
-EFI_FILE_HANDLE
-image_volume(EFI_HANDLE img_handle);
+EFI_FILE_HANDLE image_volume(EFI_HANDLE img_handle);
 
-EFI_FILE_HANDLE
-open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name);
+EFI_FILE_HANDLE open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name);
+void close_file(EFI_FILE_HANDLE file);
 
-void *
-read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset, size_t size);
+void *read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset,
+                size_t size);
 
-void
-close_file(EFI_FILE_HANDLE file);
+size_t file_size(EFI_FILE_HANDLE file);
 
 #endif

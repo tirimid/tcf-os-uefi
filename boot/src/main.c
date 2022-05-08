@@ -5,8 +5,7 @@
 #include "io/rdftype.h"
 #include "io/files.h"
 
-EFI_STATUS
-efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
+EFI_STATUS efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
 {
         init_boot(sys_table);
         log_info(L"entering kernel...");

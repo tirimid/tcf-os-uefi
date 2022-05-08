@@ -10,10 +10,10 @@ CC = clang
 CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
 	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
-LIBCOBJS = $(IMEDDIR)/lcstring.o
+LIBCOBJS = $(IMEDDIR)/lcstring.o $(IMEDDIR)/lcmath.o
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/pgalloc.o \
        $(IMEDDIR)/paging.o $(IMEDDIR)/paging.o $(IMEDDIR)/psf.o \
-       $(IMEDDIR)/gfx.o
+       $(IMEDDIR)/gfx.o $(IMEDDIR)/bitmap.o
 
 LD = clang
 LDS = linker.ld

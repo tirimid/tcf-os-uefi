@@ -2,14 +2,12 @@
 
 static struct psf_font psf_font;
 
-void
-init_psf(const struct psf_font *font_in_use)
+void init_psf(const struct psf_font *font_in_use)
 {
         psf_font = *font_in_use;
 }
 
-void
-draw_psf_glyph(int x, int y, wchar_t c, struct color col)
+void draw_psf_glyph(int x, int y, wchar_t c, struct color col)
 {
         const uint8_t *glyph
                 = &psf_font.glyph_buf[c * psf_font.hdr.glyph_bytes];

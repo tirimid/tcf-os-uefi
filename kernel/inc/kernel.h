@@ -3,10 +3,8 @@
 
 #include "comboot.h"
 
-void
-init_kernel(const struct boot_info *info);
+void init_kernel(const struct boot_info *info);
 
-void
-hang(void);
+void hang(void);
 
 #endif
