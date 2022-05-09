@@ -1,30 +1,30 @@
 #include <efi.h>
 #include <efilib.h>
 #include "boot.h"
-#include "io/text.h"
-#include "io/rdftype.h"
-#include "io/files.h"
+#include "io.h"
 
 EFI_STATUS efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
 {
-        init_boot(sys_table);
-        log_info(L"entering kernel...");
+        boot_ctl_init_boot(sys_table);
         
-        EFI_FILE_HANDLE vol = image_volume(img_handle);
-        EFI_FILE_HANDLE file = open_file(vol, L"sys\\kernel.elf");
+        EFI_FILE_HANDLE vol = io_files_image_volume(img_handle);
+        EFI_FILE_HANDLE file = io_files_open_file(vol, L"sys\\kernel.elf");
 
-        void *kernel_entry = load_elf_file(file, ELF_HEADER_INST_SET_X86_64,
-                                           ELF_HEADER_TYPE_EXECUTABLE);
+        void *k_entry = io_ftype_load_elf_file(file,
+                                               ELF_HEADER_INST_SET_X86_64,
+                                               ELF_HEADER_TYPE_EXECUTABLE);
 
-        close_file(file);
+        io_files_close_file(file);
 
-        __attribute__((ms_abi)) int (*kernel_main)(const struct boot_info *)
-                = (int (*)(const struct boot_info *))kernel_entry;
+        __attribute__((ms_abi))
+        int (*k_main)(const struct com_boot_boot_info *)
+                = (int (*)(const struct com_boot_boot_info *))k_entry;
 
-        struct boot_info boot_info = retrieve_boot_info(img_handle);
+        struct com_boot_boot_info boot_info = boot_ctl_boot_info(img_handle);
 
-        exit_boot(img_handle);
-        kernel_main(&boot_info);
+        io_text_log_info(L"entering kernel...");
+        boot_ctl_exit_boot(img_handle);
+        k_main(&boot_info);
         
         return EFI_SUCCESS;
 }

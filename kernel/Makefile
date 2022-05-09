@@ -11,13 +11,12 @@ CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
 	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o $(IMEDDIR)/lcmath.o
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/kernel.o $(IMEDDIR)/pgalloc.o \
-       $(IMEDDIR)/paging.o $(IMEDDIR)/paging.o $(IMEDDIR)/psf.o \
-       $(IMEDDIR)/gfx.o $(IMEDDIR)/bitmap.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/util_ds.o $(IMEDDIR)/kern_ctl.o \
+       $(IMEDDIR)/io_gfx.o $(IMEDDIR)/io_cpu.o
 
 LD = clang
 LDS = linker.ld
-LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static -e kernel_main
+LDFLAGS = -ffreestanding -nostdlib -T$(LDS) -Bsymbolic -static -e main
 
 ELF = kernel.elf
 

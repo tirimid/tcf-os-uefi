@@ -16,9 +16,9 @@ CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
 	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/boot.o $(IMEDDIR)/pool.o \
-       $(IMEDDIR)/paging.o $(IMEDDIR)/text.o $(IMEDDIR)/rdftype.o \
-       $(IMEDDIR)/files.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/mem_pool.o $(IMEDDIR)/mem_page.o \
+       $(IMEDDIR)/io_text.o $(IMEDDIR)/io_ftype.o $(IMEDDIR)/io_files.o \
+       $(IMEDDIR)/boot_ctl.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \
