@@ -27,7 +27,7 @@ enum gate_type {
         GATE_TYPE_TRAP = 0x8f,
 };
 
-static void set_idt_entry(int ind, void (*isr)(const struct int_isr_int_frame *frame),
+static void set_idt_entry(int ind, void (*isr)(const struct int_isr_frame *frame),
                           enum gate_type gate_type)
 {
         idt[ind] = (struct idt_entry){
@@ -41,15 +41,15 @@ static void set_idt_entry(int ind, void (*isr)(const struct int_isr_int_frame *f
         };
 }
 
-void int_idt_init_idt(void)
+void int_idt_init(void)
 {
         for (int i = 0; i < IDT_SIZE; ++i)
-                set_idt_entry(i, int_isr_default_isr, GATE_TYPE_INTERRUPT);
+                set_idt_entry(i, int_isr_default, GATE_TYPE_INTERRUPT);
 
-        set_idt_entry(0x0, int_isr_div_by_0_isr, GATE_TYPE_INTERRUPT);
-        set_idt_entry(0x1, int_isr_debug_isr, GATE_TYPE_TRAP);
-        set_idt_entry(0xd, int_isr_gp_fault_isr, GATE_TYPE_INTERRUPT);
-        set_idt_entry(0xe, int_isr_page_fault_isr, GATE_TYPE_INTERRUPT);
+        set_idt_entry(0x0, int_isr_div_by_0, GATE_TYPE_INTERRUPT);
+        set_idt_entry(0x1, int_isr_debug, GATE_TYPE_TRAP);
+        set_idt_entry(0xd, int_isr_gp_fault, GATE_TYPE_INTERRUPT);
+        set_idt_entry(0xe, int_isr_page_fault, GATE_TYPE_INTERRUPT);
         
         struct idt_reg idtr = {
                 .offset = (uintptr_t)idt,

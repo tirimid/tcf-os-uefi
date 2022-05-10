@@ -8,25 +8,26 @@
  * ===========
  */
 
-union cpu_state_register {
+union cpu_state_reg {
         uint64_t s64;
         uint32_t s32[2];
         uint16_t s16[4];
         uint8_t s8[8];
 };
 
-struct cpu_state_cpu_regs {
-        union cpu_state_register rax;
-        union cpu_state_register rbx;
-        union cpu_state_register rcx;
-        union cpu_state_register rdx;
-        union cpu_state_register rsi;
-        union cpu_state_register rdi;
-        union cpu_state_register rsp;
-        union cpu_state_register rbp;
+struct cpu_state_regs {
+        union cpu_state_reg rax;
+        union cpu_state_reg rbx;
+        union cpu_state_reg rcx;
+        union cpu_state_reg rdx;
+        union cpu_state_reg rsi;
+        union cpu_state_reg rdi;
+        union cpu_state_reg rsp;
+        union cpu_state_reg rbp;
 };
 
-struct cpu_state_cpu_regs cpu_state_cpu_regs(void);
+struct cpu_state_regs cpu_state_regs(void);
+void cpu_state_set_regs(const struct cpu_state_regs *regs);
 
 /* =========
  * cpu_gdt.c
@@ -39,6 +40,6 @@ enum cpu_gdt_selector {
         CPU_GDT_SELECTOR_KERNEL_DATA = 0x10,
 };
 
-void cpu_gdt_init_gdt(void);
+void cpu_gdt_init(void);
 
 #endif

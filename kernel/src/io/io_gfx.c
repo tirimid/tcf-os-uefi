@@ -3,10 +3,13 @@
 #include "lcstring.h"
 
 static struct com_gfx_frame_buf frame_buf;
+static struct com_gfx_psf_font psf_font;
 
-void io_gfx_init_gfx(const struct com_gfx_frame_buf *_frame_buf)
+void io_gfx_init(const struct com_gfx_frame_buf *_frame_buf,
+                 const struct com_gfx_psf_font *_psf_font)
 {
         frame_buf = *_frame_buf;
+        psf_font = *_psf_font;
 }
 
 void io_gfx_draw_pixel(int x, int y, struct io_gfx_color col)
@@ -45,13 +48,6 @@ void io_gfx_clear_screen(struct io_gfx_color col)
         size_t writes = frame_buf.res_horiz * frame_buf.res_vert / 2;
 
         fast_memset(frame_buf.base, q, writes);
-}
-
-static struct com_gfx_psf_font psf_font;
-
-void io_gfx_init_psf(const struct com_gfx_psf_font *_psf_font)
-{
-        psf_font = *_psf_font;
 }
 
 void io_gfx_draw_psf_glyph(int x, int y, wchar_t c, struct io_gfx_color col)

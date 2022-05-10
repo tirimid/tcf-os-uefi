@@ -8,31 +8,27 @@
  * =========
  */
 
-void int_idt_init_idt(void);
+void int_idt_init(void);
 
 /* =========
  * int_isr.c
  * =========
  */
 
-struct int_isr_int_frame;
+struct int_isr_frame;
 
-__attribute__((interrupt)) void int_isr_default_isr(const struct int_isr_int_frame *frame);
-__attribute__((interrupt)) void int_isr_div_by_0_isr(const struct int_isr_int_frame *frame);
-__attribute__((interrupt)) void int_isr_debug_isr(const struct int_isr_int_frame *frame);
-__attribute__((interrupt)) void int_isr_gp_fault_isr(const struct int_isr_int_frame *frame);
-__attribute__((interrupt)) void int_isr_page_fault_isr(const struct int_isr_int_frame *frame);
+__attribute__((interrupt)) void int_isr_default(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void int_isr_div_by_0(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void int_isr_debug(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void int_isr_gp_fault(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void int_isr_page_fault(const struct int_isr_frame *frame);
 
 /* =========
  * int_pic.c
  * =========
  */
 
-void int_pic_remap_pic_1(uint8_t range_start);
-void int_pic_remap_pic_2(uint8_t range_start);
-
-void int_pic_end_pic_1_int(void);
-void int_pic_end_pic_2_int(void);
+void int_pic_remap(uint8_t range_start_pic1, uint8_t range_start_pic2);
 void int_pic_end_int(void);
 
 #endif

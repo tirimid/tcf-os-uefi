@@ -39,7 +39,7 @@ struct com_gfx_psf_font {
  * ====
  */
 
-struct com_boot_boot_info {
+struct com_boot_info {
         struct com_gfx_frame_buf frame_buf;
         struct com_gfx_psf_font font;
         int page_size;

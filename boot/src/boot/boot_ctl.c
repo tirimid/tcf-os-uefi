@@ -5,7 +5,7 @@
 #include <efilib.h>
 #include "mem.h"
 
-void boot_ctl_init_boot(EFI_SYSTEM_TABLE *sys_table)
+void boot_ctl_init(EFI_SYSTEM_TABLE *sys_table)
 {
         ST = sys_table;
         BS = sys_table->BootServices;
@@ -13,13 +13,13 @@ void boot_ctl_init_boot(EFI_SYSTEM_TABLE *sys_table)
         io_text_log_info(L"initializing bootloader...");
 }
 
-void boot_ctl_exit_boot(EFI_HANDLE img_handle)
+void boot_ctl_exit(EFI_HANDLE img_handle)
 {
         io_text_log_info(L"exiting boot services...");
         BS->ExitBootServices(img_handle, 0);
 }
 
-struct com_boot_boot_info boot_ctl_boot_info(EFI_HANDLE img_handle)
+struct com_boot_info boot_ctl_info(EFI_HANDLE img_handle)
 {
         EFI_FILE_HANDLE vol = io_files_image_volume(img_handle);
         EFI_FILE_HANDLE font_file = io_files_open_file(vol, L"sys\\tamsyn-8x16-bold.psf");
@@ -29,7 +29,7 @@ struct com_boot_boot_info boot_ctl_boot_info(EFI_HANDLE img_handle)
         if (EFI_ERROR(BS->LocateProtocol(&gop_guid, NULL, (void **)&gop)))
                 io_text_log_error(L"could not locate gop");
         
-        return (struct com_boot_boot_info){
+        return (struct com_boot_info){
                 .frame_buf = {
                         .base = (void *)gop->Mode->FrameBufferBase,
                         .size = gop->Mode->FrameBufferSize,

@@ -1,8 +1,8 @@
 #include "cpu.h"
 
-struct cpu_state_cpu_regs cpu_state_cpu_regs(void)
+struct cpu_state_regs cpu_state_regs(void)
 {
-        struct cpu_state_cpu_regs regs;
+        struct cpu_state_regs regs;
 
         __asm__("mov %%rax, %0\n"
                 "mov %%rbx, %1\n"
@@ -16,4 +16,19 @@ struct cpu_state_cpu_regs cpu_state_cpu_regs(void)
                   "=m" (regs.rsi), "=m" (regs.rdi), "=m" (regs.rsp), "=m" (regs.rbp));
 
         return regs;
+}
+
+void cpu_state_set_regs(const struct cpu_state_regs *regs)
+{
+        __asm__("mov %0, %%rax\n"
+                "mov %1, %%rbx\n"
+                "mov %2, %%rcx\n"
+                "mov %3, %%rdx\n"
+                "mov %4, %%rsi\n"
+                "mov %5, %%rdi\n"
+                "mov %6, %%rsp\n"
+                "mov %7, %%rbp\n"
+                :
+                : "m" (regs->rax), "m" (regs->rbx), "m" (regs->rcx), "m" (regs->rdx),
+                  "m" (regs->rsi), "m" (regs->rdi), "m" (regs->rsp), "m" (regs->rbp));
 }

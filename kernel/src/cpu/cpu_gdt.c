@@ -71,7 +71,7 @@ struct __attribute__((packed)) gdt_reg {
         uint64_t offset;
 };
 
-void cpu_gdt_init_gdt(void)
+void cpu_gdt_init(void)
 {
         struct gdt_reg gdtr = {
                 .size = sizeof(gdt),
