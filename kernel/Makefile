@@ -7,12 +7,13 @@ INCDIR = inc
 BUILDDIR = build
 
 CC = clang
-CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding \
-	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
+CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding -I$(COMMONDIR)/inc \
+	 -I$(LIBCDIR)/inc
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o $(IMEDDIR)/lcmath.o
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/util_ds.o $(IMEDDIR)/kern_ctl.o \
-       $(IMEDDIR)/io_gfx.o $(IMEDDIR)/io_cpu.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/util_ds.o $(IMEDDIR)/kern_ctl.o $(IMEDDIR)/io_gfx.o \
+       $(IMEDDIR)/io_cpu.o $(IMEDDIR)/mem_pgalloc.o $(IMEDDIR)/mem_page.o $(IMEDDIR)/mem_heap.o \
+       $(IMEDDIR)/int_isr.o $(IMEDDIR)/int_idt.o $(IMEDDIR)/cpu_state.o $(IMEDDIR)/cpu_gdt.o
 
 LD = clang
 LDS = linker.ld

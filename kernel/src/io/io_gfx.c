@@ -21,6 +21,14 @@ void io_gfx_draw_pixel(int x, int y, struct io_gfx_color col)
 void io_gfx_draw_rect(const struct io_gfx_rect *rect, struct io_gfx_color col)
 {
         for (int i = rect->x; i < rect->x + rect->w; ++i) {
+                for (int j = rect->y; j < rect->y + rect->h; ++j)
+                        io_gfx_draw_pixel(i, j, col);
+        }
+}
+
+void io_gfx_draw_hollow_rect(const struct io_gfx_rect *rect, struct io_gfx_color col)
+{
+        for (int i = rect->x; i < rect->x + rect->w; ++i) {
                 for (int j = rect->y; j < rect->y + rect->h; ++j) {
                         bool should_draw = i == rect->x || i == rect->x + rect->w - 1
                                            || j == rect->y || j == rect->y + rect->h - 1;
@@ -28,14 +36,6 @@ void io_gfx_draw_rect(const struct io_gfx_rect *rect, struct io_gfx_color col)
                         if (should_draw)
                                 io_gfx_draw_pixel(i, j, col);
                 }
-        }
-}
-
-void io_gfx_fill_rect(const struct io_gfx_rect *rect, struct io_gfx_color col)
-{
-        for (int i = rect->x; i < rect->x + rect->w; ++i) {
-                for (int j = rect->y; j < rect->y + rect->h; ++j)
-                        io_gfx_draw_pixel(i, j, col);
         }
 }
 
