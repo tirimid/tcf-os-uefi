@@ -73,6 +73,11 @@ struct __attribute__((packed)) gdt_reg {
 
 void cpu_gdt_init(void)
 {
+        static bool initialized = false;
+
+        if (initialized)
+                return;
+
         struct gdt_reg gdtr = {
                 .size = sizeof(gdt),
                 .offset = (uintptr_t)&gdt[0],
@@ -89,4 +94,6 @@ void cpu_gdt_init(void)
                 "sti\n"
                 :
                 : "m" (gdtr), "i" (CPU_GDT_SELECTOR_KERNEL_DATA));
+
+        initialized = true;
 }

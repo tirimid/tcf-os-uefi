@@ -1,5 +1,6 @@
 #include "io.h"
 
+#include <stdbool.h>
 #include "lcstring.h"
 
 static struct com_gfx_frame_buf frame_buf;
@@ -8,8 +9,15 @@ static struct com_gfx_psf_font psf_font;
 void io_gfx_init(const struct com_gfx_frame_buf *_frame_buf,
                  const struct com_gfx_psf_font *_psf_font)
 {
+        static bool initialized = false;
+
+        if (initialized)
+                return;
+
         frame_buf = *_frame_buf;
         psf_font = *_psf_font;
+
+        initialized = true;
 }
 
 void io_gfx_draw_pixel(int x, int y, struct io_gfx_color col)

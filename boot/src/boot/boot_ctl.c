@@ -4,13 +4,21 @@
 #include <efi.h>
 #include <efilib.h>
 #include "mem.h"
+#include <stdbool.h>
 
 void boot_ctl_init(EFI_SYSTEM_TABLE *sys_table)
 {
+        static bool initialized = false;
+
+        if (initialized)
+                return;
+
         ST = sys_table;
         BS = sys_table->BootServices;
         
         io_text_log_info(L"initializing bootloader...");
+
+        initialized = true;
 }
 
 void boot_ctl_exit(EFI_HANDLE img_handle)

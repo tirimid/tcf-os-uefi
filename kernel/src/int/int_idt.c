@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "cpu.h"
+#include <stdbool.h>
 
 #define IDT_SIZE 256
 
@@ -43,6 +44,11 @@ static void set_idt_entry(int ind, void (*isr)(const struct int_isr_frame *frame
 
 void int_idt_init(void)
 {
+        static bool initialized = false;
+
+        if (initialized)
+                return;
+
         for (int i = 0; i < IDT_SIZE; ++i)
                 set_idt_entry(i, int_isr_default, GATE_TYPE_INTERRUPT);
 
@@ -59,4 +65,6 @@ void int_idt_init(void)
         __asm__("lidt %0\n"
                 :
                 : "m" (idtr));
+
+        initialized = true;
 }
