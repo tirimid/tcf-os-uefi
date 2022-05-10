@@ -13,12 +13,10 @@
 
 EFI_FILE_HANDLE io_files_image_volume(EFI_HANDLE img_handle);
 
-EFI_FILE_HANDLE io_files_open_file(EFI_FILE_HANDLE vol,
-                                   const wchar_t *file_name);
+EFI_FILE_HANDLE io_files_open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name);
 void io_files_close_file(EFI_FILE_HANDLE file);
 
-void *io_files_read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset,
-                         size_t size);
+void *io_files_read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset, size_t size);
 size_t io_files_file_size(EFI_FILE_HANDLE file);
 
 /* =========
@@ -55,8 +53,7 @@ enum io_ftype_elf_header_type {
 };
 
 /* returns entry point for elf file */
-void *io_ftype_load_elf_file(EFI_FILE_HANDLE file,
-                             enum io_ftype_elf_header_inst_set inst_set,
+void *io_ftype_load_elf_file(EFI_FILE_HANDLE file, enum io_ftype_elf_header_inst_set inst_set,
                              enum io_ftype_elf_header_type type);
 
 #endif

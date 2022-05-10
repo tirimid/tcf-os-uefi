@@ -16,8 +16,7 @@ EFI_FILE_HANDLE io_files_image_volume(EFI_HANDLE img_handle)
         EFI_GUID fs_guid = EFI_SIMPLE_FILE_SYSTEM_PROTOCOL_GUID;
         EFI_FILE_IO_INTERFACE *vol_iface;
         
-        BS->HandleProtocol(loaded_img->DeviceHandle, &fs_guid,
-                           (void **)&vol_iface);
+        BS->HandleProtocol(loaded_img->DeviceHandle, &fs_guid, (void **)&vol_iface);
         
         EFI_FILE_HANDLE vol;
         
@@ -29,8 +28,7 @@ EFI_FILE_HANDLE io_files_image_volume(EFI_HANDLE img_handle)
 /* buffer is used to allow const file_name argument */
 static wchar_t file_name_buf[256] = { L'\0' };
 
-EFI_FILE_HANDLE io_files_open_file(EFI_FILE_HANDLE vol,
-                                   const wchar_t *file_name)
+EFI_FILE_HANDLE io_files_open_file(EFI_FILE_HANDLE vol, const wchar_t *file_name)
 {
         wcscpy(file_name_buf, file_name);
         
@@ -47,8 +45,7 @@ void io_files_close_file(EFI_FILE_HANDLE file)
         file->Close(file);
 }
 
-void *io_files_read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset,
-                         size_t size)
+void *io_files_read_file(EFI_FILE_HANDLE file, void *dst, uintptr_t offset, size_t size)
 {
         file->SetPosition(file, offset);
         file->Read(file, &size, dst);
