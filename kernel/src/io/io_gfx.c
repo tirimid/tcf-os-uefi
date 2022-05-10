@@ -22,10 +22,8 @@ void io_gfx_draw_rect(const struct io_gfx_rect *rect, struct io_gfx_color col)
 {
         for (int i = rect->x; i < rect->x + rect->w; ++i) {
                 for (int j = rect->y; j < rect->y + rect->h; ++j) {
-                        bool should_draw = i == rect->x
-                                           || i == rect->x + rect->w - 1
-                                           || j == rect->y
-                                           || j == rect->y + rect->h - 1;
+                        bool should_draw = i == rect->x || i == rect->x + rect->w - 1
+                                           || j == rect->y || j == rect->y + rect->h - 1;
 
                         if (should_draw)
                                 io_gfx_draw_pixel(i, j, col);
@@ -58,8 +56,7 @@ void io_gfx_init_psf(const struct com_gfx_psf_font *_psf_font)
 
 void io_gfx_draw_psf_glyph(int x, int y, wchar_t c, struct io_gfx_color col)
 {
-        int glyph_ind = c * psf_font.hdr.glyph_bytes;
-        const uint8_t *glyph = &psf_font.glyph_buf[glyph_ind];
+        const uint8_t *glyph = &psf_font.glyph_buf[c * psf_font.hdr.glyph_bytes];
 
         for (int j = 0; j < psf_font.hdr.height; ++j) {
                 for (int i = 0; i < psf_font.hdr.width; ++i) {

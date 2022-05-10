@@ -16,8 +16,7 @@ EFI_FILE_HANDLE io_files_image_volume(EFI_HANDLE img_handle)
         EFI_GUID fs_guid = EFI_SIMPLE_FILE_SYSTEM_PROTOCOL_GUID;
         EFI_FILE_IO_INTERFACE *vol_iface;
         
-        BS->HandleProtocol(loaded_img->DeviceHandle, &fs_guid,
-                           (void **)&vol_iface);
+        BS->HandleProtocol(loaded_img->DeviceHandle, &fs_guid, (void **)&vol_iface);
         
         EFI_FILE_HANDLE vol;
         

@@ -22,10 +22,7 @@ void boot_ctl_exit_boot(EFI_HANDLE img_handle)
 struct com_boot_boot_info boot_ctl_boot_info(EFI_HANDLE img_handle)
 {
         EFI_FILE_HANDLE vol = io_files_image_volume(img_handle);
-        
-        EFI_FILE_HANDLE font_file
-                = io_files_open_file(vol, L"sys\\tamsyn-8x16-bold.psf");
-        
+        EFI_FILE_HANDLE font_file = io_files_open_file(vol, L"sys\\tamsyn-8x16-bold.psf");
         EFI_GUID gop_guid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
         EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
 

@@ -10,8 +10,7 @@ void *mem_page_alloc_page(void *phys_addr)
 
 void *mem_page_alloc_pages(void *phys_addr, size_t cnt)
 {
-        BS->AllocatePages(AllocateAddress, EfiLoaderData, cnt,
-                          (EFI_PHYSICAL_ADDRESS *)&phys_addr);
+        BS->AllocatePages(AllocateAddress, EfiLoaderData, cnt, (EFI_PHYSICAL_ADDRESS *)&phys_addr);
                           
         return phys_addr;
 }

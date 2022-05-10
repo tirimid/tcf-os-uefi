@@ -18,9 +18,7 @@ struct com_gfx_psf_font io_ftype_read_psf_font_file(EFI_FILE_HANDLE file)
         size_t glyph_buf_size = font.hdr.glyph_bytes * font.hdr.glyph_cnt;
         
         font.glyph_buf = mem_pool_alloc_mem(glyph_buf_size);
-        
-        io_files_read_file(file, font.glyph_buf, sizeof(font.hdr),
-                           glyph_buf_size);
+        io_files_read_file(file, font.glyph_buf, sizeof(font.hdr), glyph_buf_size);
         
         return font;
 }
@@ -85,19 +83,16 @@ void *io_ftype_load_elf_file(EFI_FILE_HANDLE file,
         size_t prog_hdrs_size = elf_hdr.prog_hdr_cnt * elf_hdr.prog_hdr_size;
         struct elf_prog_header *prog_hdrs = mem_pool_alloc_mem(prog_hdrs_size);
         
-        io_files_read_file(file, prog_hdrs, elf_hdr.prog_hdr_table_pos,
-                           prog_hdrs_size);
+        io_files_read_file(file, prog_hdrs, elf_hdr.prog_hdr_table_pos, prog_hdrs_size);
 
         for (int i = 0; i < elf_hdr.prog_hdr_cnt; ++i) {
                 switch (prog_hdrs[i].type) {
                 case ELF_PROG_HEADER_TYPE_LOAD:;
                         size_t page_cnt = (prog_hdrs[i].size_mem) / PAGE_SIZE;
                         void *hdr_virt_addr = (void *)prog_hdrs[i].virt_addr;
-                        void *hdr_addr = mem_page_alloc_pages(hdr_virt_addr,
-                                                              page_cnt);
+                        void *hdr_addr = mem_page_alloc_pages(hdr_virt_addr, page_cnt);
 
-                        io_files_read_file(file, hdr_addr,
-                                           prog_hdrs[i].file_offset,
+                        io_files_read_file(file, hdr_addr, prog_hdrs[i].file_offset,
                                            prog_hdrs[i].size_file);
                         
                         break;
