@@ -11,6 +11,6 @@ void fast_memset(void *dst, uint64_t q, size_t writes);
 
 void memcpy(void *restrict dst, const void *restrict src, size_t size);
 wchar_t *wcscpy(wchar_t *restrict dst, const wchar_t *restrict src);
-int memcmp(const void *a, const void *b, size_t size);
+int memcmp(const void *restrict a, const void *restrict b, size_t size);
 
 #endif

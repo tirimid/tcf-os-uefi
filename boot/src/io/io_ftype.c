@@ -67,8 +67,7 @@ struct __attribute__((packed)) elf_prog_header {
 };
 
 /* returns entry point for elf file */
-void *io_ftype_load_elf_file(EFI_FILE_HANDLE file,
-                             enum io_ftype_elf_header_inst_set inst_set,
+void *io_ftype_load_elf_file(EFI_FILE_HANDLE file, enum io_ftype_elf_header_inst_set inst_set,
                              enum io_ftype_elf_header_type type)
 {
         struct elf_header elf_hdr;
