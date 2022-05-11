@@ -10,15 +10,13 @@ INCDIR = inc
 BUILDDIR = build
 
 CC = clang
-CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar \
-	 -mno-red-zone -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 \
-	 -I$(GNUEFIDIR)/inc/protocol -I$(INCDIR) -std=c11 -pedantic \
-	 -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
+CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar -mno-red-zone \
+	 -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 -I$(GNUEFIDIR)/inc/protocol -I$(INCDIR) \
+	 -std=c11 -pedantic -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/mem_pool.o $(IMEDDIR)/mem_page.o \
-       $(IMEDDIR)/io_text.o $(IMEDDIR)/io_ftype.o $(IMEDDIR)/io_files.o \
-       $(IMEDDIR)/boot_ctl.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/mem_pool.o $(IMEDDIR)/mem_page.o $(IMEDDIR)/io_text.o \
+       $(IMEDDIR)/io_ftype.o $(IMEDDIR)/io_files.o $(IMEDDIR)/boot_ctl.o $(IMEDDIR)/mem_map.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \

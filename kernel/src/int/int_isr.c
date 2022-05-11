@@ -1,7 +1,5 @@
 #include "int.h"
 
-#include "io.h"
-
 __attribute__((interrupt)) void int_isr_default(const struct int_isr_frame *frame)
 {
 }
