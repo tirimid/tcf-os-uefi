@@ -34,6 +34,25 @@ struct com_gfx_psf_font {
         uint8_t *glyph_buf;
 };
 
+/* ======
+ * memory
+ * ======
+ */
+
+struct com_mem_map_entry {
+        uint32_t type;
+        void *phys_start;
+        void *virt_start;
+        uint64_t page_cnt;
+        uint64_t attr;
+};
+
+struct com_mem_map {
+        struct com_mem_map_entry *map;
+        size_t ent_size;
+        int entries;
+};
+
 /* ====
  * boot
  * ====
@@ -42,6 +61,7 @@ struct com_gfx_psf_font {
 struct com_boot_info {
         struct com_gfx_frame_buf frame_buf;
         struct com_gfx_psf_font font;
+        struct com_mem_map mem_map;
         int page_size;
 };
 

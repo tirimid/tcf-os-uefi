@@ -46,6 +46,7 @@ struct com_boot_info boot_ctl_info(EFI_HANDLE img_handle)
                         .scanline_pixels = gop->Mode->Info->PixelsPerScanLine,
                 },
                 .font = io_ftype_read_psf_font_file(font_file),
+                .mem_map = mem_map_get(),
                 .page_size = PAGE_SIZE,
         };
 }

@@ -1,5 +1,6 @@
 #include "kern.h"
 
+#include "mem.h"
 #include <stdbool.h>
 #include "io.h"
 #include "int.h"
@@ -16,6 +17,7 @@ void kern_ctl_init(const struct com_boot_info *info)
         cpu_gdt_init();
         int_pic_remap(0x20, 0x28);
         int_idt_init();
+        mem_pgalloc_init(&info->mem_map, info->page_size);
 
         initialized = true;
 }
