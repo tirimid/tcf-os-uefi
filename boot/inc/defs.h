@@ -1,5 +1,5 @@
-#ifndef DEFS_H_WAmfmKrUUIQN2sd7GqCTyoykFwd4UCqP
-#define DEFS_H_WAmfmKrUUIQN2sd7GqCTyoykFwd4UCqP
+#ifndef BOOT_DEFS_H
+#define BOOT_DEFS_H
 
 #define VERSION(ver, day, mon, year) L#ver L"_" L#day L"." L#mon L"." L#year
 

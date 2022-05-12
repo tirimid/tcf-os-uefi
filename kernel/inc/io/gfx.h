@@ -3,6 +3,7 @@
 
 #include "comgfx.h"
 #include <stdint.h>
+#include <stddef.h>
 
 void io_gfx_init(const struct com_gfx_frame_buf *_frame_buf,
                  const struct com_gfx_psf_font *_psf_font);
@@ -28,5 +29,6 @@ void io_gfx_draw_hollow_rect(const struct io_gfx_rect *rect, struct io_gfx_color
 void io_gfx_clear_screen(struct io_gfx_color col);
 
 void io_gfx_draw_psf_glyph(int x, int y, wchar_t c, struct io_gfx_color col);
+void io_gfx_draw_psf_string(int x, int y, const char *s, struct io_gfx_color col);
 
 #endif

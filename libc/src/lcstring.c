@@ -49,3 +49,13 @@ int memcmp(const void *restrict a, const void *restrict b, size_t size)
         
         return 0;
 }
+
+size_t strlen(const char *s)
+{
+        size_t size = 0;
+
+        for (; s[size] != '\0'; ++size)
+                continue;
+
+        return size;
+}

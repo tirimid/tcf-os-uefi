@@ -2,7 +2,7 @@
 
 ## info
 
-trying out UEFI, porting / extending my project tcf-os.
+my x86_64 UEFI operating system.
 
 ## build dependancies
 
