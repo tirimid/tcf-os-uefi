@@ -15,8 +15,8 @@ EFI_STATUS efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
 
         io_files_close_file(file);
 
-        __attribute__((ms_abi)) int (*k_main)(const struct com_boot_info *)
-                = (int (*)(const struct com_boot_info *))k_entry;
+        __attribute__((ms_abi)) int (*k_main)(struct com_boot_info *)
+                = (int (*)(struct com_boot_info *))k_entry;
 
         struct com_boot_info boot_info = boot_ctl_info(img_handle);
 

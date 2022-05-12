@@ -33,6 +33,7 @@ void io_gfx_draw_hollow_rect(const struct io_gfx_rect *rect, struct io_gfx_color
 void io_gfx_clear_screen(struct io_gfx_color col);
 
 void io_gfx_draw_psf_glyph(int x, int y, wchar_t c, struct io_gfx_color col);
+void io_gfx_draw_psf_string(int x, int y, const char *s, struct io_gfx_color col);
 
 /* ========
  * io_cpu.c

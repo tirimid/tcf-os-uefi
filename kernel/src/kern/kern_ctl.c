@@ -6,7 +6,7 @@
 #include "int.h"
 #include "cpu.h"
 
-void kern_ctl_init(const struct com_boot_info *info)
+void kern_ctl_init(struct com_boot_info *info)
 {
         static bool initialized = false;
 

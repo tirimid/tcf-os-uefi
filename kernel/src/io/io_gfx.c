@@ -72,3 +72,9 @@ void io_gfx_draw_psf_glyph(int x, int y, wchar_t c, struct io_gfx_color col)
                 }
         }
 }
+
+void io_gfx_draw_psf_string(int x, int y, const char *s, struct io_gfx_color col)
+{
+        for (size_t i = 0; s[i] != '\0'; ++i)
+                io_gfx_draw_psf_glyph(x + psf_font.hdr.width * i, y, s[i], col);
+}
