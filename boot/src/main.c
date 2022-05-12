@@ -1,7 +1,9 @@
 #include <efi.h>
+#include "io/files.h"
 #include <efilib.h>
-#include "boot.h"
-#include "io.h"
+#include "boot/ctl.h"
+#include "io/text.h"
+#include "io/ftype.h"
 
 EFI_STATUS efi_main(EFI_HANDLE img_handle, EFI_SYSTEM_TABLE *sys_table)
 {

@@ -1,6 +1,6 @@
-#include "kern.h"
-#include "common.h"
-#include "io.h"
+#include "kern/ctl.h"
+#include "comboot.h"
+#include "io/gfx.h"
 #include <stddef.h>
 
 __attribute__((ms_abi)) int main(const struct com_boot_info *info)

@@ -11,10 +11,9 @@ CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding -I$(CO
 	 -I$(LIBCDIR)/inc
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o $(IMEDDIR)/lcmath.o
-OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/util_ds.o $(IMEDDIR)/kern_ctl.o $(IMEDDIR)/io_gfx.o \
-       $(IMEDDIR)/io_cpu.o $(IMEDDIR)/mem_pgalloc.o $(IMEDDIR)/mem_page.o $(IMEDDIR)/mem_heap.o \
-       $(IMEDDIR)/int_isr.o $(IMEDDIR)/int_idt.o $(IMEDDIR)/cpu_state.o $(IMEDDIR)/cpu_gdt.o \
-       $(IMEDDIR)/int_pic.o
+OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/ds.o $(IMEDDIR)/ctl.o $(IMEDDIR)/gfx.o $(IMEDDIR)/cpu.o \
+       $(IMEDDIR)/pgalloc.o $(IMEDDIR)/page.o $(IMEDDIR)/heap.o $(IMEDDIR)/isr.o $(IMEDDIR)/idt.o \
+       $(IMEDDIR)/state.o $(IMEDDIR)/gdt.o $(IMEDDIR)/pic.o
 
 LD = clang
 LDS = linker.ld

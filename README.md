@@ -4,11 +4,13 @@
 
 trying out UEFI, porting / extending my project tcf-os.
 
-## dependancies
+## build dependancies
 
 * cloc (for rep_info.sh)
 * clang
 * make
+* qemu-system-x86_64
+* mtools
 
 ## building
 
