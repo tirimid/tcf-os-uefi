@@ -4,6 +4,7 @@
 #include "util/ds.h"
 #include <stdint.h>
 #include "lcstring.h"
+#include "io/gfx.h"
 
 static struct util_ds_bitmap page_bm;
 static size_t page_size;
@@ -31,21 +32,38 @@ void mem_pgalloc_init(struct com_mem_map *mem_map, size_t _page_size)
         }
 
         page_bm = (struct util_ds_bitmap){
-                .data = (uint8_t *)largest_free_ent,
+                .data = largest_free_ent->phys_start,
                 .size_bits = largest_free_ent->page_cnt,
         };
 
         memset(page_bm.data, 0, util_ds_bitmap_size_bytes(&page_bm));
 
+        /* lock unusable pages */
+        mem_pgalloc_lock_pages((void *)0x0, 256);
+        mem_pgalloc_lock_pages(&page_bm, util_ds_bitmap_size_bytes(&page_bm) / page_size + 1);
+
         initialized = true;
 }
 
+static size_t bitmap_ind_start = 0;
+
 void *mem_pgalloc_request_page(void)
 {
-        return mem_pgalloc_request_pages(1);
-}
+        for (size_t i = bitmap_ind_start; i < page_bm.size_bits; ++i) {
+                if (util_ds_bitmap_bit(&page_bm, i))
+                        continue;
 
-static size_t bitmap_ind_start = 0;
+                bitmap_ind_start = i + 1;
+
+                void *page = (void *)(i * page_size);
+
+                mem_pgalloc_lock_page(page);
+
+                return page;
+        }
+
+        return NULL;
+}
 
 void *mem_pgalloc_request_pages(size_t page_cnt)
 {
@@ -55,14 +73,17 @@ void *mem_pgalloc_request_pages(size_t page_cnt)
 
                 size_t free_pages = 0;
 
-                for (; free_pages <= page_cnt; ++free_pages) {
-                        if (util_ds_bitmap_bit(&page_bm, i + free_pages))
+                for (size_t j = i; j < page_bm.size_bits && j < i + page_cnt; ++j) {
+                        if (!util_ds_bitmap_bit(&page_bm, j))
+                                ++free_pages;
+                        else
                                 break;
                 }
 
-                if (free_pages > page_cnt) {
-                        void *page = (void *)(i * page_size);
+                if (free_pages >= page_cnt) {
                         bitmap_ind_start = i + free_pages;
+                        
+                        void *page = (void *)(i * page_size);
 
                         mem_pgalloc_lock_pages(page, free_pages);
 
@@ -80,6 +101,22 @@ void mem_pgalloc_free_page(void *page)
         bitmap_ind_start = (uintptr_t)page / page_size;
 }
 
+void *mem_pgalloc_request_zero_page(void)
+{
+        void *page = mem_pgalloc_request_page();
+        fast_memset(page, 0, page_size / 8);
+
+        return page;
+}
+
+void *mem_pgalloc_request_zero_pages(size_t page_cnt)
+{
+        void *pages = mem_pgalloc_request_pages(page_cnt);
+        fast_memset(pages, 0, page_cnt * page_size / 8);
+
+        return pages;
+}
+
 void mem_pgalloc_lock_page(void *page)
 {
         util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size, true);
@@ -88,7 +125,7 @@ void mem_pgalloc_lock_page(void *page)
 void mem_pgalloc_lock_pages(void *page, size_t page_cnt)
 {
         for (int i = 0; i < page_cnt; ++i)
-                util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size + i, true);
+                mem_pgalloc_lock_page((void *)((uintptr_t)page + i * page_size));
 }
 
 void mem_pgalloc_unlock_page(void *page)
@@ -99,5 +136,5 @@ void mem_pgalloc_unlock_page(void *page)
 void mem_pgalloc_unlock_pages(void *page, size_t page_cnt)
 {
         for (int i = 0; i < page_cnt; ++i)
-                util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size + i, false);
+                mem_pgalloc_unlock_page((void *)((uintptr_t)page + i * page_size));
 }

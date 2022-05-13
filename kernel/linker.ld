@@ -3,7 +3,7 @@ ENTRY(main)
 
 SECTIONS
 {
-        __KERNEL_ELF_START__ = .;
+        __KERNEL_START__ = .;
         
         .text : ALIGN(0x1000) {
                 *(.text)
@@ -22,5 +22,5 @@ SECTIONS
                 *(.bss)
         }
         
-        __KERNEL_ELF_END__ = .;
+        __KERNEL_END__ = .;
 }

@@ -17,7 +17,7 @@ void fast_memset(void *dst, uint64_t q, size_t writes)
                 "rep stosq\n"
                 :
                 : "m" (dst), "m" (writes), "m" (q)
-                : "rcx");
+                : "rax", "rcx", "rdi");
 }
 
 void memcpy(void *restrict dst, const void *restrict src, size_t size)

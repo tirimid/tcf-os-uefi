@@ -45,8 +45,5 @@ $(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
 $(IMEDDIR)/%.o: $(SRCDIR)/int/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^ -mno-red-zone -mgeneral-regs-only
 
-$(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
-	$(CC) $(CFLAGS) -o $@ -c $^
-
 $(IMEDDIR)/%.o: $(LIBCDIR)/src/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
