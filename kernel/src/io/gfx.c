@@ -78,3 +78,20 @@ void io_gfx_draw_psf_string(int x, int y, const char *s, struct io_gfx_color col
         for (int i = 0; s[i] != '\0'; ++i)
                 io_gfx_draw_psf_glyph(x + i * 8, y, s[i], col);
 }
+
+void io_gfx_draw_psf_hex(int x, int y, const void *h, size_t size, struct io_gfx_color col)
+{
+        char char_map[16] = {
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
+        };
+
+        io_gfx_draw_psf_string(x, y, "0x", col);
+
+        for (size_t i = 0; i < size; ++i) {
+                const uint8_t *b = (const uint8_t *)h + i;
+                int x_off = psf_font.hdr.width * i * 2 + psf_font.hdr.width * 2;
+
+                io_gfx_draw_psf_glyph(x + x_off, y, char_map[(*b & 0xf0) >> 4], col);
+                io_gfx_draw_psf_glyph(x + x_off + psf_font.hdr.width, y, char_map[*b & 0xf], col);
+        }
+}
