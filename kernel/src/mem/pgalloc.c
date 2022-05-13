@@ -49,31 +49,55 @@ static size_t bitmap_ind_start = 0;
 
 void *mem_pgalloc_request_pages(size_t page_cnt)
 {
+        for (size_t i = bitmap_ind_start; i < page_bm.size_bits; ++i) {
+                if (util_ds_bitmap_bit(&page_bm, i))
+                        continue;
+
+                size_t free_pages = 0;
+
+                for (; free_pages <= page_cnt; ++free_pages) {
+                        if (util_ds_bitmap_bit(&page_bm, i + free_pages))
+                                break;
+                }
+
+                if (free_pages > page_cnt) {
+                        void *page = (void *)(i * page_size);
+                        bitmap_ind_start = i + free_pages;
+
+                        mem_pgalloc_lock_pages(page, free_pages);
+
+                        return page;
+                }
+        }
+
+        return NULL;
 }
 
-static inline size_t page_to_bitmap_ind(const void *page)
+void mem_pgalloc_free_page(void *page)
 {
-        return (uintptr_t)page / page_size;
+        mem_pgalloc_unlock_page(page);
+
+        bitmap_ind_start = (uintptr_t)page / page_size;
 }
 
 void mem_pgalloc_lock_page(void *page)
 {
-        util_ds_set_bitmap_bit(&page_bm, page_to_bitmap_ind(page), true);
+        util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size, true);
 }
 
 void mem_pgalloc_lock_pages(void *page, size_t page_cnt)
 {
         for (int i = 0; i < page_cnt; ++i)
-                util_ds_set_bitmap_bit(&page_bm, page_to_bitmap_ind(page) + i, true);
+                util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size + i, true);
 }
 
 void mem_pgalloc_unlock_page(void *page)
 {
-        util_ds_set_bitmap_bit(&page_bm, page_to_bitmap_ind(page), false);
+        util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size, false);
 }
 
 void mem_pgalloc_unlock_pages(void *page, size_t page_cnt)
 {
         for (int i = 0; i < page_cnt; ++i)
-                util_ds_set_bitmap_bit(&page_bm, page_to_bitmap_ind(page) + i, false);
+                util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size + i, false);
 }
