@@ -4,7 +4,7 @@
 #include "commem.h"
 #include <stddef.h>
 
-void mem_pgalloc_init(struct com_mem_map *mem_map, size_t _page_size);
+void mem_pgalloc_init(const struct com_mem_map *mem_map, size_t _page_size);
 
 void *mem_pgalloc_request_page(void);
 void *mem_pgalloc_request_pages(size_t page_cnt);

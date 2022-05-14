@@ -9,7 +9,7 @@
 #include "mem/page.h"
 #include "mem/heap.h"
 
-void kern_ctl_init(struct com_boot_info *info)
+void kern_ctl_init(const struct com_boot_info *info)
 {
         static bool initialized = false;
 

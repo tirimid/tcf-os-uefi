@@ -5,7 +5,7 @@
 #include "mem/heap.h"
 #include "mem/pgalloc.h"
 
-__attribute__((ms_abi)) int main(struct com_boot_info *info)
+__attribute__((ms_abi)) int main(const struct com_boot_info *info)
 {
         kern_ctl_init(info);
 

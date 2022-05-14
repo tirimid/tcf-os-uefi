@@ -9,7 +9,7 @@
 static struct util_ds_bitmap page_bm;
 static size_t page_size;
 
-void mem_pgalloc_init(struct com_mem_map *mem_map, size_t _page_size)
+void mem_pgalloc_init(const struct com_mem_map *mem_map, size_t _page_size)
 {
         static bool initialized = false;
 
@@ -18,11 +18,11 @@ void mem_pgalloc_init(struct com_mem_map *mem_map, size_t _page_size)
 
         page_size = _page_size;
 
-        struct com_mem_map_entry *largest_free_ent = mem_map->map;
+        const struct com_mem_map_entry *largest_free_ent = mem_map->map;
 
         for (int i = 0; i < mem_map->entries; ++i) {
                 uintptr_t ent_addr = (uintptr_t)mem_map->map + mem_map->ent_size * i;
-                struct com_mem_map_entry *ent = (struct com_mem_map_entry *)ent_addr;
+                const struct com_mem_map_entry *ent = (const struct com_mem_map_entry *)ent_addr;
 
                 bool larger = ent->type == COM_MEM_MAP_ENTRY_TYPE_CONVENTIONAL
                               && ent->page_cnt > largest_free_ent->page_cnt;
