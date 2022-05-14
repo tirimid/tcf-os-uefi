@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "mem/pgalloc.h"
+#include "defs.h"
 
 #define MAX_TABLE_ENTRIES 512
 
@@ -45,8 +46,12 @@ void mem_page_init(size_t _page_size)
         page_size = _page_size;
         pml4 = mem_pgalloc_request_zero_page();
 
-        /* identity map 512mb */
-        mem_page_map_pages((void *)0x0, (void *)0x0, 0x20000000 / page_size);
+        /* mapping any pages fewer than 0x80300 causes problems for some reason */
+        mem_page_map_pages((void *)0x0, (void *)0x0, 0x80300);
+
+        __asm__("mov %0, %%cr3\n"
+                :
+                : "r" (pml4));
 
         initialized = true;
 }

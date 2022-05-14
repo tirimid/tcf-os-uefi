@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 
-void mem_heap_init(size_t _heap_pages);
+void mem_heap_init(size_t _heap_pages, size_t _page_size);
 
 void *mem_heap_alloc(size_t size);
 void mem_heap_free(void *ptr);

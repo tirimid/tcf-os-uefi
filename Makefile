@@ -13,7 +13,7 @@ KERNELELF = kernel.elf
 IMG = tcf-os-uefi.img
 
 EMU = qemu-system-x86_64
-EFLAGS = -cpu qemu64 -m 1G -net none \
+EFLAGS = -cpu qemu64 -m 2G -net none \
 	 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE.fd" \
 	 -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS.fd"
 

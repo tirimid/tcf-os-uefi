@@ -65,20 +65,27 @@ void *mem_pgalloc_request_page(void)
         return NULL;
 }
 
+static size_t free_pages_at_bit(size_t bit, size_t max_pages)
+{
+        size_t pages = 0;
+
+        for (size_t i = bit; i < page_bm.size_bits && i <= bit + max_pages; ++i) {
+                if (!util_ds_bitmap_bit(&page_bm, i))
+                        ++pages;
+                else
+                        break;
+        }
+
+        return pages;
+}
+
 void *mem_pgalloc_request_pages(size_t page_cnt)
 {
         for (size_t i = bitmap_ind_start; i < page_bm.size_bits; ++i) {
                 if (util_ds_bitmap_bit(&page_bm, i))
                         continue;
 
-                size_t free_pages = 0;
-
-                for (size_t j = i; j < page_bm.size_bits && j < i + page_cnt; ++j) {
-                        if (!util_ds_bitmap_bit(&page_bm, j))
-                                ++free_pages;
-                        else
-                                break;
-                }
+                size_t free_pages = free_pages_at_bit(i, page_cnt);
 
                 if (free_pages >= page_cnt) {
                         bitmap_ind_start = i + free_pages;
@@ -88,7 +95,8 @@ void *mem_pgalloc_request_pages(size_t page_cnt)
                         mem_pgalloc_lock_pages(page, free_pages);
 
                         return page;
-                }
+                } else
+                        i += free_pages;
         }
 
         return NULL;
