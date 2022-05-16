@@ -71,6 +71,8 @@ struct __attribute__((packed)) gdt_reg {
         uint64_t offset;
 };
 
+extern void cpu_gdt_load(struct gdt_reg *gdtr);
+
 void cpu_gdt_init(void)
 {
         static bool initialized = false;
@@ -83,17 +85,7 @@ void cpu_gdt_init(void)
                 .offset = (uintptr_t)&gdt[0],
         };
 
-        __asm__("cli\n"
-                "lgdt %0\n"
-                "mov %1, %%ax\n"
-                "mov %%ax, %%ds\n"
-                "mov %%ax, %%es\n"
-                "mov %%ax, %%fs\n"
-                "mov %%ax, %%gs\n"
-                "mov %%ax, %%ss\n"
-                "sti\n"
-                :
-                : "m" (gdtr), "i" (CPU_GDT_SELECTOR_KERNEL_DATA));
+        cpu_gdt_load(&gdtr);
 
         initialized = true;
 }

@@ -7,13 +7,17 @@ INCDIR = inc
 BUILDDIR = build
 
 CC = clang
-CFLAGS = -std=c11 -pedantic -target x86_64-elf -I$(INCDIR) -ffreestanding -I$(COMMONDIR)/inc \
-	 -I$(LIBCDIR)/inc
+CFLAGS = -target x86_64-elf -std=c11 -pedantic -I$(INCDIR) -ffreestanding -I$(COMMONDIR)/inc \
+	 -I$(LIBCDIR)/inc -mno-red-zone
+
+AS = x86_64-elf-as
+ASFLAGS =
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o $(IMEDDIR)/lcmath.o
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/ds.o $(IMEDDIR)/ctl.o $(IMEDDIR)/gfx.o $(IMEDDIR)/cpu.o \
        $(IMEDDIR)/pgalloc.o $(IMEDDIR)/page.o $(IMEDDIR)/heap.o $(IMEDDIR)/isr.o $(IMEDDIR)/idt.o \
-       $(IMEDDIR)/state.o $(IMEDDIR)/gdt.o $(IMEDDIR)/pic.o
+       $(IMEDDIR)/state.o $(IMEDDIR)/gdt_0.o $(IMEDDIR)/pic.o $(IMEDDIR)/pit.o $(IMEDDIR)/error.o \
+       $(IMEDDIR)/gdt_1.o
 
 LD = clang
 LDS = linker.ld
@@ -42,8 +46,11 @@ $(IMEDDIR)/%.o: $(SRCDIR)/%.c
 $(IMEDDIR)/%.o: $(SRCDIR)/*/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^
 
+$(IMEDDIR)/%.o: $(SRCDIR)/*/%.s
+	$(AS) $(ASFLAGS) -o $@ $^
+
 $(IMEDDIR)/%.o: $(SRCDIR)/int/%.c
-	$(CC) $(CFLAGS) -o $@ -c $^ -mno-red-zone -mgeneral-regs-only
+	$(CC) $(CFLAGS) -o $@ -c $^ -mgeneral-regs-only
 
 $(IMEDDIR)/%.o: $(LIBCDIR)/src/%.c
 	$(CC) $(CFLAGS) -o $@ -c $^

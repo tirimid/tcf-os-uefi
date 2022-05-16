@@ -95,3 +95,8 @@ void io_gfx_draw_psf_hex(int x, int y, const void *h, size_t size, struct io_gfx
                 io_gfx_draw_psf_glyph(x + x_off + psf_font.hdr.width, y, char_map[*b & 0xf], col);
         }
 }
+
+struct com_gfx_psf_font_header io_gfx_psf_font_info(void)
+{
+        return psf_font.hdr;
+}

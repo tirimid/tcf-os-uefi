@@ -8,5 +8,6 @@ void mem_heap_init(size_t _heap_pages, size_t _page_size);
 
 void *mem_heap_alloc(size_t size);
 void mem_heap_free(void *ptr);
+void *mem_heap_realloc(void *ptr, size_t new_size);
 
 #endif

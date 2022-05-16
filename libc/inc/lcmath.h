@@ -1,6 +1,9 @@
 #ifndef LIBC_LCMATH_H
 #define LIBC_LCMATH_H
 
-int ceil(float n);
+#include <stdint.h>
+#include <stddef.h>
+
+int64_t ceil(double n);
 
 #endif

@@ -35,7 +35,7 @@ void io_cpu_write_port_long(enum io_cpu_port port, uint32_t l)
         wait_port_io();
 }
 
-uint8_t io_cpu_read_port_byte(enum io_cpu_port port)
+__attribute__((no_caller_saved_registers)) uint8_t io_cpu_read_port_byte(enum io_cpu_port port)
 {
         uint8_t b;
 

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include "mem/pgalloc.h"
 #include <stddef.h>
+#include "lcstring.h"
 
 struct heap_header {
         struct heap_header *next;
@@ -80,4 +81,54 @@ void *mem_heap_alloc(size_t size)
 
 void mem_heap_free(void *ptr)
 {
+        struct heap_header *prev_hdr = NULL;
+
+        for (struct heap_header *hdr = heap_ptr; hdr->next != NULL; hdr = hdr->next) {
+                size_t size = sizeof(*hdr->next) + hdr->next->size;
+                bool collision = (uintptr_t)ptr <= (uintptr_t)hdr->next + size
+                                 && (uintptr_t)ptr >= (uintptr_t)hdr->next;
+                
+                if (collision) {
+                        prev_hdr = hdr;
+                        
+                        break;
+                }
+        }
+
+        if (prev_hdr == NULL)
+                return;
+
+        if (prev_hdr->next == last_hdr)
+                last_hdr = prev_hdr;
+
+        prev_hdr->next = prev_hdr->next->next;
+}
+
+void *mem_heap_realloc(void *ptr, size_t new_size)
+{
+        struct heap_header *alloc_hdr = NULL;
+
+        for (struct heap_header *hdr = heap_ptr; hdr != NULL; hdr = hdr->next) {
+                bool collision = (uintptr_t)ptr <= (uintptr_t)hdr + sizeof(*hdr) + hdr->size
+                                 && (uintptr_t)ptr >= (uintptr_t)hdr;
+
+                if (collision) {
+                        alloc_hdr = hdr;
+
+                        break;
+                }
+        }
+
+        if (alloc_hdr == NULL || new_size < alloc_hdr->size)
+                return NULL;
+
+        void *new_ptr = mem_heap_alloc(new_size);
+
+        if (new_ptr == NULL)
+                return NULL;
+
+        memcpy(new_ptr, alloc_hdr + 1, alloc_hdr->size);
+        mem_heap_free(ptr);
+
+        return new_ptr;
 }

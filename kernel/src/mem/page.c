@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "mem/pgalloc.h"
 #include "defs.h"
+#include "kern/error.h"
 
 #define MAX_TABLE_ENTRIES 512
 
@@ -48,7 +49,7 @@ void mem_page_init(size_t _page_size)
 
         /* mapping any pages fewer than 0x80300 causes problems for some reason */
         mem_page_map_pages((void *)0x0, (void *)0x0, 0x80300);
-
+        
         __asm__("mov %0, %%cr3\n"
                 :
                 : "r" (pml4));
@@ -85,11 +86,17 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
         };
 
         struct page_dir_entry *ent = &pml4->entries[ind.pdpt];
-
+        
         struct page_dir *pdpt;
 
         if (!ent->present) {
                 pdpt = mem_pgalloc_request_zero_page();
+
+                if (pdpt == NULL) {
+                        kern_error_panic(KERN_ERROR_PANIC_CODE_MEMORY_FAIL,
+                                         "failed to allocate page for PDPT");
+                }
+
                 *ent = (struct page_dir_entry){
                         .addr = (uintptr_t)pdpt >> 12,
                         .present = true,
@@ -104,6 +111,12 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
 
         if (!ent->present) {
                 pdt = mem_pgalloc_request_zero_page();
+                
+                if (pdt == NULL) {
+                        kern_error_panic(KERN_ERROR_PANIC_CODE_MEMORY_FAIL,
+                                         "failed to allocate page for PDT");
+                }
+                
                 *ent = (struct page_dir_entry){
                         .addr = (uintptr_t)pdt >> 12,
                         .present = true,
@@ -118,6 +131,12 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
 
         if (!ent->present) {
                 pt = mem_pgalloc_request_zero_page();
+                
+                if (pt == NULL) {
+                        kern_error_panic(KERN_ERROR_PANIC_CODE_MEMORY_FAIL,
+                                         "failed to allocate page for PT");
+                }
+                
                 *ent = (struct page_dir_entry){
                         .addr = (uintptr_t)pt >> 12,
                         .present = true,

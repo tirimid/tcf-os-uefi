@@ -8,6 +8,7 @@
 #include "cpu/gdt.h"
 #include "mem/page.h"
 #include "mem/heap.h"
+#include "sched/pit.h"
 
 void kern_ctl_init(const struct com_boot_info *info)
 {
@@ -16,16 +17,19 @@ void kern_ctl_init(const struct com_boot_info *info)
         if (initialized)
                 return;
         
+        io_gfx_init(&info->frame_buf, &info->font);
+        
         cpu_gdt_init();
         
         mem_pgalloc_init(&info->mem_map, info->page_size);
         mem_page_init(info->page_size);
         mem_heap_init(200, info->page_size);
-
-        int_pic_remap(0x20, 0x28);
-        int_idt_init();
         
-        io_gfx_init(&info->frame_buf, &info->font);
+        int_idt_init();
+        int_pic_remap(0x20, 0x28);
+        int_pic_mask(0xfc, 0xff);
+
+        sched_pit_init(500);
         
         initialized = true;
 }
