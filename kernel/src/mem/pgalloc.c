@@ -19,10 +19,6 @@ void *mem_pgalloc_request_page(void)
 {
 }
 
-static size_t free_pages_at_bit(size_t bit, size_t max_pages)
-{
-}
-
 void *mem_pgalloc_request_pages(size_t page_cnt)
 {
 }
