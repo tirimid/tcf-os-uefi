@@ -31,16 +31,16 @@ void mem_pgalloc_init(const struct com_mem_map *mem_map, size_t _page_size)
                         largest_free_ent = ent;
         }
 
-        size_t bm_size_offset = (uintptr_t)largest_free_ent->phys_start / page_size;
+        size_t bm_size_offset = (uintptr_t)largest_free_ent->phys_start / page_size + 1;
 
         page_bm = (struct util_ds_bitmap){
                 .data = largest_free_ent->phys_start,
                 .size_bits = largest_free_ent->page_cnt + bm_size_offset,
         };
 
-        size_t bm_data_pages = util_ds_bitmap_size_bytes(&page_bm) / page_size + 1;
+        size_t bm_data_page_cnt = util_ds_bitmap_size_bytes(&page_bm) / page_size + 1;
 
-        mem_pgalloc_reserve_pages(page_bm.data, bm_data_pages);
+        mem_pgalloc_reserve_pages(page_bm.data, bm_data_page_cnt);
         memset(page_bm.data, 0, util_ds_bitmap_size_bytes(&page_bm));
         
         mem_pgalloc_reserve_pages((void *)0x0, 256);
@@ -144,7 +144,7 @@ void mem_pgalloc_free_page(void *page)
 {
         util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size, false);
 
-        size_t new_bis = (uintptr_t)page / page_size < bitmap_ind_start;
+        size_t new_bis = (uintptr_t)page / page_size;
 
         if (new_bis < bitmap_ind_start)
                 bitmap_ind_start = new_bis;
@@ -155,7 +155,7 @@ void mem_pgalloc_free_pages(void *page, size_t page_cnt)
         for (size_t i = 0; i < page_cnt; ++i)
                 util_ds_set_bitmap_bit(&page_bm, (uintptr_t)page / page_size + i, false);
 
-        size_t new_bis = (uintptr_t)page / page_size < bitmap_ind_start;
+        size_t new_bis = (uintptr_t)page / page_size;
 
         if (new_bis < bitmap_ind_start)
                 bitmap_ind_start = new_bis;
