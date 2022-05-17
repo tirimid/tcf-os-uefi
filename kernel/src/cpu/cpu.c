@@ -1,8 +1,8 @@
 #include "cpu/state.h"
 
-struct cpu_state_regs cpu_state_regs(void)
+struct cpu_regs cpu_regs(void)
 {
-        struct cpu_state_regs regs;
+        struct cpu_regs regs;
 
         __asm__("mov %%rax, %0\n"
                 "mov %%rbx, %1\n"
@@ -18,7 +18,7 @@ struct cpu_state_regs cpu_state_regs(void)
         return regs;
 }
 
-void cpu_state_set_regs(const struct cpu_state_regs *regs)
+void cpu_set_regs(const struct cpu_regs *regs)
 {
         __asm__("mov %0, %%rax\n"
                 "mov %1, %%rbx\n"

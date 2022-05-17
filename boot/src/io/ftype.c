@@ -5,24 +5,24 @@
 #include "mem/page.h"
 #include "mem/pool.h"
 #include "lcstring.h"
-#include "io/files.h"
+#include "io/file.h"
 #include <stdbool.h>
 #include "io/text.h"
 
 /* buffer of psf font must be freed after use */
-struct com_gfx_psf_font io_ftype_read_psf_font_file(EFI_FILE_HANDLE file)
+struct gfx_psf_font ftype_read_psf_font(EFI_FILE_HANDLE file)
 {
-        struct com_gfx_psf_font font;
+        struct gfx_psf_font font;
 
-        io_files_read_file(file, &font, 0, sizeof(font.hdr));
+        file_read(file, &font, 0, sizeof(font.hdr));
         
         if (font.hdr.magic != 0x864ab572)
-                io_text_log_error(L"read invalid font header");
+                text_log_error(L"read invalid font header");
         
         size_t glyph_buf_size = font.hdr.glyph_bytes * font.hdr.glyph_cnt;
         
-        font.glyph_buf = mem_pool_alloc_mem(glyph_buf_size);
-        io_files_read_file(file, font.glyph_buf, sizeof(font.hdr), glyph_buf_size);
+        font.glyph_buf = pool_alloc(glyph_buf_size);
+        file_read(file, font.glyph_buf, sizeof(font.hdr), glyph_buf_size);
         
         return font;
 }
@@ -71,38 +71,37 @@ struct __attribute__((packed)) elf_prog_header {
 };
 
 /* returns entry point for elf file */
-void *io_ftype_load_elf_file(EFI_FILE_HANDLE file, enum io_ftype_elf_header_inst_set inst_set,
-                             enum io_ftype_elf_header_type type)
+void *ftype_load_elf(EFI_FILE_HANDLE file, enum ftype_elf_header_inst_set inst_set,
+                     enum ftype_elf_header_type type)
 {
         struct elf_header elf_hdr;
-        io_files_read_file(file, &elf_hdr, 0, sizeof(elf_hdr));
+        file_read(file, &elf_hdr, 0, sizeof(elf_hdr));
 
         bool hdr_valid = elf_hdr.inst_set == inst_set && elf_hdr.type == type
                          && memcmp("\x7f" "ELF", (char *)&elf_hdr.magic, 4) == 0;
         
         if (!hdr_valid)
-                io_text_log_error(L"read invalid elf header");
+                text_log_error(L"read invalid elf header");
 
         size_t prog_hdrs_size = elf_hdr.prog_hdr_cnt * elf_hdr.prog_hdr_size;
-        struct elf_prog_header *prog_hdrs = mem_pool_alloc_mem(prog_hdrs_size);
+        struct elf_prog_header *prog_hdrs = pool_alloc(prog_hdrs_size);
         
-        io_files_read_file(file, prog_hdrs, elf_hdr.prog_hdr_table_pos, prog_hdrs_size);
+        file_read(file, prog_hdrs, elf_hdr.prog_hdr_table_pos, prog_hdrs_size);
 
         for (int i = 0; i < elf_hdr.prog_hdr_cnt; ++i) {
                 switch (prog_hdrs[i].type) {
                 case ELF_PROG_HEADER_TYPE_LOAD:;
                         size_t page_cnt = (prog_hdrs[i].size_mem) / PAGE_SIZE;
                         void *hdr_virt_addr = (void *)prog_hdrs[i].virt_addr;
-                        void *hdr_addr = mem_page_alloc_pages(hdr_virt_addr, page_cnt);
+                        void *hdr_addr = page_alloc(hdr_virt_addr, page_cnt);
 
-                        io_files_read_file(file, hdr_addr, prog_hdrs[i].file_offset,
-                                           prog_hdrs[i].size_file);
+                        file_read(file, hdr_addr, prog_hdrs[i].file_offset, prog_hdrs[i].size_file);
                         
                         break;
                 }
         }
         
-        mem_pool_free_mem(prog_hdrs);
+        pool_free(prog_hdrs);
         
         return (void *)elf_hdr.prog_entry_pos;
 }

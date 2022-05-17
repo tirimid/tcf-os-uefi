@@ -1,4 +1,4 @@
-#include "io/cpu.h"
+#include "cpu/io.h"
 
 /* wait for slow io port operations to finish */
 static inline void wait_port_io(void)
@@ -8,7 +8,7 @@ static inline void wait_port_io(void)
                 : "a" (0));
 }
 
-void io_cpu_write_port_byte(enum io_cpu_port port, uint8_t b)
+void io_write_port_byte(enum io_port port, uint8_t b)
 {
         __asm__("outb %0, %1\n"
                 :
@@ -17,7 +17,7 @@ void io_cpu_write_port_byte(enum io_cpu_port port, uint8_t b)
         wait_port_io();
 }
 
-void io_cpu_write_port_word(enum io_cpu_port port, uint16_t w)
+void io_write_port_word(enum io_port port, uint16_t w)
 {
         __asm__("outw %0, %1\n"
                 :
@@ -26,7 +26,7 @@ void io_cpu_write_port_word(enum io_cpu_port port, uint16_t w)
         wait_port_io();
 }
 
-void io_cpu_write_port_long(enum io_cpu_port port, uint32_t l)
+void io_write_port_long(enum io_port port, uint32_t l)
 {
         __asm__("outl %0, %1\n"
                 :
@@ -35,7 +35,7 @@ void io_cpu_write_port_long(enum io_cpu_port port, uint32_t l)
         wait_port_io();
 }
 
-__attribute__((no_caller_saved_registers)) uint8_t io_cpu_read_port_byte(enum io_cpu_port port)
+__attribute__((no_caller_saved_registers)) uint8_t io_read_port_byte(enum io_port port)
 {
         uint8_t b;
 
@@ -48,7 +48,7 @@ __attribute__((no_caller_saved_registers)) uint8_t io_cpu_read_port_byte(enum io
         return b;
 }
 
-uint16_t io_cpu_read_port_word(enum io_cpu_port port)
+uint16_t io_read_port_word(enum io_port port)
 {
         uint16_t w;
 
@@ -61,7 +61,7 @@ uint16_t io_cpu_read_port_word(enum io_cpu_port port)
         return w;
 }
 
-uint32_t io_cpu_read_port_long(enum io_cpu_port port)
+uint32_t io_read_port_long(enum io_port port)
 {
         uint32_t l;
 

@@ -1,12 +1,12 @@
 #include "sched/pit.h"
 
-#include "io/cpu.h"
+#include "cpu/io.h"
 #include <stdbool.h>
 
 static double approx_uptime = 0.0;
 static uint16_t div;
 
-void sched_pit_init(uint16_t _div)
+void pit_init(uint16_t _div)
 {
         static bool initialized = false;
 
@@ -15,13 +15,13 @@ void sched_pit_init(uint16_t _div)
 
         div = _div > 50 ? _div : 50;
 
-        io_cpu_write_port_byte(IO_CPU_PORT_PIT_DATA_0, div & 0xff);
-        io_cpu_write_port_byte(IO_CPU_PORT_PIT_DATA_0, (div & 0xff00) >> 8);
+        io_write_port_byte(IO_PORT_PIT_DATA_0, div & 0xff);
+        io_write_port_byte(IO_PORT_PIT_DATA_0, (div & 0xff00) >> 8);
 
         initialized = true;
 }
 
-void sched_pit_sleep(uint64_t millis)
+void pit_sleep(uint64_t millis)
 {
         double start_time = approx_uptime;
 
@@ -29,12 +29,12 @@ void sched_pit_sleep(uint64_t millis)
                 __asm__("hlt\n");
 }
 
-__attribute__((no_caller_saved_registers)) void sched_pit_tick(void)
+__attribute__((no_caller_saved_registers)) void pit_tick(void)
 {
         approx_uptime += 1.0 / (double)(1193182 / div);
 }
 
-double sched_pit_approx_uptime(void)
+double pit_approx_uptime(void)
 {
         return approx_uptime;
 }

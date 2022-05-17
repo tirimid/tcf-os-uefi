@@ -1,8 +1,8 @@
-        .ifndef KERNEL_CPU_GDT_S
-        .equ KERNEL_CPU_GDT_S, 1
+        .ifndef _CPU_GDT_S_
+        .equ _CPU_GDT_S_, 1
 
-        .globl cpu_gdt_load
-cpu_gdt_load:
+        .globl gdt_load
+gdt_load:
                 lgdt (%rdi)
 
                 mov $0x10, %ax

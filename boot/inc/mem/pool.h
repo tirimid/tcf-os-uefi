@@ -1,9 +1,9 @@
-#ifndef BOOT_MEM_POOL_H
-#define BOOT_MEM_POOL_H
+#ifndef _MEM_POOL_H_
+#define _MEM_POOL_H_
 
 #include <stddef.h>
 
-void *mem_pool_alloc_mem(size_t size);
-void mem_pool_free_mem(void *buf);
+void *pool_alloc(size_t size);
+void pool_free(void *buf);
 
 #endif

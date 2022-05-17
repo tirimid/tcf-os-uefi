@@ -1,5 +1,5 @@
-#ifndef BOOT_MEM_PAGE_H
-#define BOOT_MEM_PAGE_H
+#ifndef _MEM_PAGE_H_
+#define _MEM_PAGE_H_
 
 #include <stddef.h>
 #include <efi.h>
@@ -7,7 +7,6 @@
 
 #define PAGE_SIZE EFI_PAGE_SIZE
 
-void *mem_page_alloc_page(void *phys_addr);
-void *mem_page_alloc_pages(void *phys_addr, size_t cnt);
+void *page_alloc(void *phys_addr, size_t page_cnt);
 
 #endif

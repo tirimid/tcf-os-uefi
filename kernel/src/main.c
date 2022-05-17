@@ -1,5 +1,5 @@
 #include "kern/ctl.h"
-#include "comboot.h"
+#include "common/boot.h"
 #include "io/gfx.h"
 #include <stddef.h>
 #include "mem/heap.h"

@@ -3,7 +3,7 @@
 #include <efi.h>
 #include <efilib.h>
 
-void *mem_pool_alloc_mem(size_t size)
+void *pool_alloc(size_t size)
 {
         void *buf;
         EFI_STATUS rc = BS->AllocatePool(PoolAllocationType, size, &buf);
@@ -11,7 +11,7 @@ void *mem_pool_alloc_mem(size_t size)
         return EFI_ERROR(rc) ? NULL : buf;
 }
 
-void mem_pool_free_mem(void *buf)
+void pool_free(void *buf)
 {
         BS->FreePool(buf);
 }

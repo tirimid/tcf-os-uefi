@@ -1,7 +1,6 @@
 # the only change that should exist in gnu-efi is the change in data.c where
 # some data structure members were set to NULL
 GNUEFIDIR = ../gnu-efi
-COMMONDIR = ../common
 LIBCDIR = ../libc
 
 IMEDDIR = imed
@@ -12,11 +11,11 @@ BUILDDIR = build
 CC = clang
 CFLAGS = -target x86_64-unknown-windows -ffreestanding -fshort-wchar -mno-red-zone \
 	 -I$(GNUEFIDIR)/inc -I$(GNUEFIDIR)/inc/x86_64 -I$(GNUEFIDIR)/inc/protocol -I$(INCDIR) \
-	 -std=c11 -pedantic -I$(COMMONDIR)/inc -I$(LIBCDIR)/inc
+	 -std=c11 -pedantic -I../inc -I$(LIBCDIR)/inc
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/pool.o $(IMEDDIR)/page.o $(IMEDDIR)/text.o $(IMEDDIR)/ftype.o \
-       $(IMEDDIR)/files.o $(IMEDDIR)/ctl.o $(IMEDDIR)/map.o
+       $(IMEDDIR)/file.o $(IMEDDIR)/boot.o $(IMEDDIR)/mmap.o
 
 LD = clang
 LDFLAGS = -target x86_64-unknown-windows -nostdlib -Wl,-entry:efi_main \

@@ -1,13 +1,13 @@
-#include "boot/ctl.h"
+#include "boot/boot.h"
 
 #include "io/text.h"
-#include "io/files.h"
-#include "mem/map.h"
+#include "io/file.h"
+#include "mem/mmap.h"
 #include "mem/page.h"
 #include <stdbool.h>
 #include "io/ftype.h"
 
-void boot_ctl_init(EFI_SYSTEM_TABLE *sys_table)
+void boot_init(EFI_SYSTEM_TABLE *sys_table)
 {
         static bool initialized = false;
 
@@ -17,28 +17,28 @@ void boot_ctl_init(EFI_SYSTEM_TABLE *sys_table)
         ST = sys_table;
         BS = sys_table->BootServices;
         
-        io_text_log_info(L"initializing bootloader...");
+        text_log_info(L"initializing bootloader...");
 
         initialized = true;
 }
 
-void boot_ctl_exit(EFI_HANDLE img_handle)
+void boot_exit(EFI_HANDLE img_handle)
 {
-        io_text_log_info(L"exiting boot services...");
+        text_log_info(L"exiting boot services...");
         BS->ExitBootServices(img_handle, 0);
 }
 
-struct com_boot_info boot_ctl_info(EFI_HANDLE img_handle)
+struct boot_info boot_info(EFI_HANDLE img_handle)
 {
-        EFI_FILE_HANDLE vol = io_files_image_volume(img_handle);
-        EFI_FILE_HANDLE font_file = io_files_open_file(vol, L"sys\\tamsyn-8x16-bold.psf");
+        EFI_FILE_HANDLE vol = file_image_volume(img_handle);
+        EFI_FILE_HANDLE font_file = file_open(vol, L"sys\\tamsyn-8x16-bold.psf");
         EFI_GUID gop_guid = EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID;
         EFI_GRAPHICS_OUTPUT_PROTOCOL *gop;
 
         if (EFI_ERROR(BS->LocateProtocol(&gop_guid, NULL, (void **)&gop)))
-                io_text_log_error(L"could not locate gop");
+                text_log_error(L"could not locate gop");
         
-        return (struct com_boot_info){
+        return (struct boot_info){
                 .frame_buf = {
                         .base = (void *)gop->Mode->FrameBufferBase,
                         .size = gop->Mode->FrameBufferSize,
@@ -46,8 +46,8 @@ struct com_boot_info boot_ctl_info(EFI_HANDLE img_handle)
                         .res_vert = gop->Mode->Info->VerticalResolution,
                         .scanline_pixels = gop->Mode->Info->PixelsPerScanLine,
                 },
-                .font = io_ftype_read_psf_font_file(font_file),
-                .mem_map = mem_map_get(),
+                .font = ftype_read_psf_font(font_file),
+                .mem_map = mmap_get(),
                 .page_size = PAGE_SIZE,
         };
 }

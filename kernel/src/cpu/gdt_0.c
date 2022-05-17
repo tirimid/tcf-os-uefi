@@ -71,9 +71,9 @@ struct __attribute__((packed)) gdt_reg {
         uint64_t offset;
 };
 
-extern void cpu_gdt_load(struct gdt_reg *gdtr);
+extern void gdt_load(struct gdt_reg *gdtr);
 
-void cpu_gdt_init(void)
+void gdt_init(void)
 {
         static bool initialized = false;
 
@@ -85,7 +85,7 @@ void cpu_gdt_init(void)
                 .offset = (uintptr_t)&gdt[0],
         };
 
-        cpu_gdt_load(&gdtr);
+        gdt_load(&gdtr);
 
         initialized = true;
 }

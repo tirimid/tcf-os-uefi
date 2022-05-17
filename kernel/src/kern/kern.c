@@ -1,4 +1,4 @@
-#include "kern/ctl.h"
+#include "kern/kern.h"
 
 #include "mem/pgalloc.h"
 #include "int/pic.h"
@@ -10,16 +10,16 @@
 #include "mem/heap.h"
 #include "sched/pit.h"
 
-void kern_ctl_init(const struct com_boot_info *info)
+void kern_init(const struct boot_info *info)
 {
         static bool initialized = false;
 
         if (initialized)
                 return;
         
-        io_gfx_init(&info->frame_buf, &info->font);
+        gfx_init(&info->frame_buf, &info->font);
         
-        cpu_gdt_init();
+        gdt_init();
         
         mem_pgalloc_init(&info->mem_map, info->page_size);
 
@@ -37,7 +37,7 @@ void kern_ctl_init(const struct com_boot_info *info)
         initialized = true;
 }
 
-void kern_ctl_hang(void)
+void kern_hang(void)
 {
         while (true) {
                 __asm__("cli\n"

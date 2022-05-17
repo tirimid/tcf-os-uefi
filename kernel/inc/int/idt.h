@@ -1,6 +1,6 @@
-#ifndef KERNEL_INT_IDT_H
-#define KERNEL_INT_IDT_H
+#ifndef _INT_IDT_H_
+#define _INT_IDT_H_
 
-void int_idt_init(void);
+void idt_init(void);
 
 #endif

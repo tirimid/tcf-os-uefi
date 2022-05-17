@@ -1,12 +1,12 @@
-#ifndef KERNEL_CPU_GDT_H
-#define KERNEL_CPU_GDT_H
+#ifndef _CPU_GDT_H_
+#define _CPU_GDT_H_
 
-enum cpu_gdt_selector {
-        CPU_GDT_SELECTOR_KERNEL_NULL = 0x0,
-        CPU_GDT_SELECTOR_KERNEL_CODE = 0x8,
-        CPU_GDT_SELECTOR_KERNEL_DATA = 0x10,
+enum gdt_selector {
+        GDT_SELECTOR_KERNEL_NULL = 0x0,
+        GDT_SELECTOR_KERNEL_CODE = 0x8,
+        GDT_SELECTOR_KERNEL_DATA = 0x10,
 };
 
-void cpu_gdt_init(void);
+void gdt_init(void);
 
 #endif

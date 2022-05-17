@@ -1,9 +1,9 @@
-#ifndef KERNEL_INT_ISR_H
-#define KERNEL_INT_ISR_H
+#ifndef _INT_ISR_H_
+#define _INT_ISR_H_
 
 #include <stdint.h>
 
-struct int_isr_frame {
+struct isr_frame {
         uint64_t ip;
         uint64_t cs;
         uint64_t flags;
@@ -11,18 +11,18 @@ struct int_isr_frame {
         uint64_t ss;
 };
 
-__attribute__((interrupt)) void int_isr_default(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void isr_default(const struct isr_frame *frame);
 
-__attribute__((interrupt)) void int_isr_div_by_0(const struct int_isr_frame *frame);
-__attribute__((interrupt)) void int_isr_debug(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void isr_div_by_0(const struct isr_frame *frame);
+__attribute__((interrupt)) void isr_debug(const struct isr_frame *frame);
 
-__attribute__((interrupt)) void int_isr_double_fault(const struct int_isr_frame *frame,
-                                                     uint64_t err_code);
+__attribute__((interrupt)) void isr_double_fault(const struct isr_frame *frame,
+                                                 uint64_t err_code);
 
-__attribute__((interrupt)) void int_isr_gp_fault(const struct int_isr_frame *frame);
-__attribute__((interrupt)) void int_isr_page_fault(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void isr_gp_fault(const struct isr_frame *frame);
+__attribute__((interrupt)) void isr_page_fault(const struct isr_frame *frame);
 
-__attribute__((interrupt)) void int_isr_pit(const struct int_isr_frame *frame);
-__attribute__((interrupt)) void int_isr_ps2_keyboard(const struct int_isr_frame *frame);
+__attribute__((interrupt)) void isr_pit(const struct isr_frame *frame);
+__attribute__((interrupt)) void isr_ps2_keyboard(const struct isr_frame *frame);
 
 #endif
