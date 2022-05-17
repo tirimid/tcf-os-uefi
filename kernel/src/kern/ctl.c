@@ -22,6 +22,9 @@ void kern_ctl_init(const struct com_boot_info *info)
         cpu_gdt_init();
         
         mem_pgalloc_init(&info->mem_map, info->page_size);
+
+        mem_pgalloc_reserve_pages(info->frame_buf.base, info->frame_buf.size / info->page_size + 1);
+
         mem_page_init(info->page_size);
         mem_heap_init(200, info->page_size);
         
