@@ -33,7 +33,7 @@ __attribute__((interrupt)) void isr_page_fault(const struct isr_frame *frame)
 
 __attribute__((interrupt)) void isr_pit(const struct isr_frame *frame)
 {
-        sched_pit_tick();
+        pit_tick();
         pic_end_pic1_int();
 }
 

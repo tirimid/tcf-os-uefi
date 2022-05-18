@@ -6,7 +6,7 @@
 #include "io/gfx.h"
 #include "int/idt.h"
 #include "cpu/gdt.h"
-#include "mem/page.h"
+#include "mem/paging.h"
 #include "mem/heap.h"
 #include "sched/pit.h"
 
@@ -21,18 +21,18 @@ void kern_init(const struct boot_info *info)
         
         gdt_init();
         
-        mem_pgalloc_init(&info->mem_map, info->page_size);
+        pgalloc_init(&info->mem_map, info->page_size);
 
-        mem_pgalloc_reserve_pages(info->frame_buf.base, info->frame_buf.size / info->page_size + 1);
+        pgalloc_reserve_pages(info->frame_buf.base, info->frame_buf.size / info->page_size + 1);
 
-        mem_page_init(info->page_size);
-        mem_heap_init(200, info->page_size);
+        paging_init(info->page_size);
+        heap_init(200, info->page_size);
         
-        int_idt_init();
-        int_pic_remap(0x20, 0x28);
-        int_pic_mask(0xfc, 0xff);
+        idt_init();
+        pic_remap(0x20, 0x28);
+        pic_mask(0xfc, 0xff);
 
-        sched_pit_init(500);
+        pit_init(500);
         
         initialized = true;
 }

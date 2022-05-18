@@ -14,9 +14,9 @@ ASFLAGS =
 
 LIBCOBJS = $(IMEDDIR)/lcstring.o $(IMEDDIR)/lcmath.o
 OBJS = $(IMEDDIR)/main.o $(IMEDDIR)/ds.o $(IMEDDIR)/kern.o $(IMEDDIR)/gfx.o $(IMEDDIR)/io.o \
-       $(IMEDDIR)/pgalloc.o $(IMEDDIR)/page.o $(IMEDDIR)/heap.o $(IMEDDIR)/isr.o $(IMEDDIR)/idt.o \
-       $(IMEDDIR)/cpu.o $(IMEDDIR)/gdt_0.o $(IMEDDIR)/pic.o $(IMEDDIR)/pit.o $(IMEDDIR)/error.o \
-       $(IMEDDIR)/gdt_1.o
+       $(IMEDDIR)/pgalloc.o $(IMEDDIR)/paging.o $(IMEDDIR)/heap.o $(IMEDDIR)/isr.o \
+       $(IMEDDIR)/idt.o $(IMEDDIR)/cpu.o $(IMEDDIR)/gdt_0.o $(IMEDDIR)/pic.o $(IMEDDIR)/pit.o \
+       $(IMEDDIR)/error.o $(IMEDDIR)/gdt_1.o
 
 LD = clang
 LDS = linker.ld
