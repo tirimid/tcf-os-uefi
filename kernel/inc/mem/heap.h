@@ -1,5 +1,5 @@
-#ifndef _MEM_HEAP_H_
-#define _MEM_HEAP_H_
+#ifndef MEM_HEAP_H__
+#define MEM_HEAP_H__
 
 #include <stdint.h>
 #include <stddef.h>

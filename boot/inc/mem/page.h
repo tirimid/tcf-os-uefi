@@ -1,5 +1,5 @@
-#ifndef _MEM_PAGE_H_
-#define _MEM_PAGE_H_
+#ifndef MEM_PAGE_H__
+#define MEM_PAGE_H__
 
 #include <stddef.h>
 #include <efi.h>

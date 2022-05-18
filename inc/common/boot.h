@@ -1,5 +1,5 @@
-#ifndef _COMMON_BOOT_H_
-#define _COMMON_BOOT_H_
+#ifndef COMMON_BOOT_H__
+#define COMMON_BOOT_H__
 
 #include "gfx.h"
 #include "mem.h"

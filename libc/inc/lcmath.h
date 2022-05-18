@@ -1,5 +1,5 @@
-#ifndef LIBC_LCMATH_H
-#define LIBC_LCMATH_H
+#ifndef LCMATH_H__
+#define LCMATH_H__
 
 #include <stdint.h>
 #include <stddef.h>

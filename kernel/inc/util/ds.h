@@ -1,5 +1,5 @@
-#ifndef _UTIL_DS_H_
-#define _UTIL_DS_H_
+#ifndef UTIL_DS_H__
+#define UTIL_DS_H__
 
 #include <stdint.h>
 #include <stddef.h>

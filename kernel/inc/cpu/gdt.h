@@ -1,5 +1,5 @@
-#ifndef _CPU_GDT_H_
-#define _CPU_GDT_H_
+#ifndef CPU_GDT_H__
+#define CPU_GDT_H__
 
 enum gdt_selector {
         GDT_SELECTOR_KERNEL_NULL = 0x0,

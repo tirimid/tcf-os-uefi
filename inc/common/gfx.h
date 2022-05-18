@@ -1,5 +1,5 @@
-#ifndef _COMMON_GFX_H_
-#define _COMMON_GFX_H_
+#ifndef COMMON_GFX_H__
+#define COMMON_GFX_H__
 
 #include <stdint.h>
 #include <stddef.h>

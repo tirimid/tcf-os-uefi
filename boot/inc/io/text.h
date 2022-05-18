@@ -1,5 +1,5 @@
-#ifndef _IO_TEXT_H_
-#define _IO_TEXT_H_
+#ifndef IO_TEXT_H__
+#define IO_TEXT_H__
 
 #include <stddef.h>
 

@@ -1,5 +1,5 @@
-#ifndef _COMMON_MEM_H_
-#define _COMMON_MEM_H_
+#ifndef COMMON_MEM_H__
+#define COMMON_MEM_H__
 
 #include <stdint.h>
 #include <stddef.h>

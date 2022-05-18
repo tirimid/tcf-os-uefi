@@ -1,5 +1,5 @@
-#ifndef _INT_ISR_H_
-#define _INT_ISR_H_
+#ifndef INT_ISR_H__
+#define INT_ISR_H__
 
 #include <stdint.h>
 

@@ -1,5 +1,5 @@
-#ifndef _MEM_PAGING_H_
-#define _MEM_PAGING_H_
+#ifndef MEM_PAGING_H__
+#define MEM_PAGING_H__
 
 #include <stdint.h>
 #include <stddef.h>

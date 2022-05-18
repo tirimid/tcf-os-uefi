@@ -1,5 +1,5 @@
-#ifndef _MEM_MMAP_H_
-#define _MEM_MMAP_H_
+#ifndef MEM_MMAP_H__
+#define MEM_MMAP_H__
 
 #include "common/mem.h"
 

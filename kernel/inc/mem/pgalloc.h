@@ -1,5 +1,5 @@
-#ifndef _MEM_PGALLOC_H_
-#define _MEM_PGALLOC_H_
+#ifndef MEM_PGALLOC_H__
+#define MEM_PGALLOC_H__
 
 #include "common/mem.h"
 #include <stddef.h>

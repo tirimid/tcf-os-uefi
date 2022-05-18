@@ -1,5 +1,5 @@
-#ifndef _INT_IDT_H_
-#define _INT_IDT_H_
+#ifndef INT_IDT_H__
+#define INT_IDT_H__
 
 void idt_init(void);
 

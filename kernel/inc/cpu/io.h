@@ -1,5 +1,5 @@
-#ifndef _CPU_IO_H_
-#define _CPU_IO_H_
+#ifndef CPU_IO_H__
+#define CPU_IO_H__
 
 #include <stdint.h>
 

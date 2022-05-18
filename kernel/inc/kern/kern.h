@@ -1,5 +1,5 @@
-#ifndef _KERN_KERN_H_
-#define _KERN_KERN_H_
+#ifndef KERN_KERN_H__
+#define KERN_KERN_H__
 
 #include "common/boot.h"
 

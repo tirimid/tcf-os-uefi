@@ -1,5 +1,5 @@
-#ifndef _IO_FTYPE_H_
-#define _IO_FTYPE_H_
+#ifndef IO_FTYPE_H__
+#define IO_FTYPE_H__
 
 #include <efi.h>
 #include <efilib.h>

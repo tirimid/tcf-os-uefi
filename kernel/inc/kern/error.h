@@ -1,5 +1,5 @@
-#ifndef _KERN_ERROR_H_
-#define _KERN_ERROR_H_
+#ifndef KERN_ERROR_H__
+#define KERN_ERROR_H__
 
 enum error_panic_code {
         ERROR_PANIC_CODE_VITAL_INIT_FAIL = 0,

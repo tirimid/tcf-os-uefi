@@ -1,5 +1,5 @@
-#ifndef _BOOT_BOOT_H_
-#define _BOOT_BOOT_H_
+#ifndef BOOT_BOOT_H__
+#define BOOT_BOOT_H__
 
 #include <efi.h>
 #include <efilib.h>

@@ -1,5 +1,5 @@
-#ifndef _IO_GFX_H_
-#define _IO_GFX_H_
+#ifndef IO_GFX_H__
+#define IO_GFX_H__
 
 #include "common/gfx.h"
 #include <stdint.h>

@@ -1,5 +1,5 @@
-#ifndef _SCHED_PIT_H_
-#define _SCHED_PIT_H_
+#ifndef SCHED_PIT_H__
+#define SCHED_PIT_H__
 
 #include <stdint.h>
 

@@ -1,5 +1,5 @@
-#ifndef _MEM_POOL_H_
-#define _MEM_POOL_H_
+#ifndef MEM_POOL_H__
+#define MEM_POOL_H__
 
 #include <stddef.h>
 
