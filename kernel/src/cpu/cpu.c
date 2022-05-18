@@ -1,4 +1,4 @@
-#include "cpu/state.h"
+#include "cpu/cpu.h"
 
 struct cpu_regs cpu_regs(void)
 {

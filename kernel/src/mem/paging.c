@@ -1,4 +1,4 @@
-#include "mem/page.h"
+#include "mem/paging.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -37,7 +37,7 @@ struct page_dir {
 static struct page_dir *pml4;
 static size_t page_size;
 
-void mem_page_init(size_t _page_size)
+void paging_init(size_t _page_size)
 {
         static bool initialized = false;
 
@@ -45,10 +45,10 @@ void mem_page_init(size_t _page_size)
                 return;
 
         page_size = _page_size;
-        pml4 = mem_pgalloc_request_zero_page();
+        pml4 = pgalloc_request_zero_page();
 
         /* mapping any pages fewer than 0x80300 causes problems for some reason */
-        mem_page_map_pages((void *)0x0, (void *)0x0, 0x80300);
+        paging_map_pages((void *)0x0, (void *)0x0, 0x80300);
         
         __asm__("mov %0, %%cr3\n"
                 :
@@ -76,7 +76,7 @@ struct page_table {
 };
 
 /* new paging data structures are created when necessary */
-void mem_page_map_page(void *phys_addr, void *virt_addr)
+void paging_map_page(void *phys_addr, void *virt_addr)
 {
         struct page_index ind = {
                 .page = (uintptr_t)virt_addr >> 12 & 0x1ff,
@@ -90,11 +90,11 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
         struct page_dir *pdpt;
 
         if (!ent->present) {
-                pdpt = mem_pgalloc_request_zero_page();
+                pdpt = pgalloc_request_zero_page();
 
                 if (pdpt == NULL) {
-                        kern_error_panic(KERN_ERROR_PANIC_CODE_MEMORY_FAIL,
-                                         "failed to allocate page for PDPT");
+                        error_panic(ERROR_PANIC_CODE_MEMORY_FAIL,
+                                    "failed to allocate page for PDPT");
                 }
 
                 *ent = (struct page_dir_entry){
@@ -110,11 +110,11 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
         struct page_dir *pdt;
 
         if (!ent->present) {
-                pdt = mem_pgalloc_request_zero_page();
+                pdt = pgalloc_request_zero_page();
                 
                 if (pdt == NULL) {
-                        kern_error_panic(KERN_ERROR_PANIC_CODE_MEMORY_FAIL,
-                                         "failed to allocate page for PDT");
+                        error_panic(ERROR_PANIC_CODE_MEMORY_FAIL,
+                                    "failed to allocate page for PDT");
                 }
                 
                 *ent = (struct page_dir_entry){
@@ -130,11 +130,11 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
         struct page_table *pt;
 
         if (!ent->present) {
-                pt = mem_pgalloc_request_zero_page();
+                pt = pgalloc_request_zero_page();
                 
                 if (pt == NULL) {
-                        kern_error_panic(KERN_ERROR_PANIC_CODE_MEMORY_FAIL,
-                                         "failed to allocate page for PT");
+                        error_panic(ERROR_PANIC_CODE_MEMORY_FAIL,
+                                    "failed to allocate page for PT");
                 }
                 
                 *ent = (struct page_dir_entry){
@@ -152,10 +152,10 @@ void mem_page_map_page(void *phys_addr, void *virt_addr)
         };
 }
 
-void mem_page_map_pages(void *phys_addr, void *virt_addr, size_t page_cnt)
+void paging_map_pages(void *phys_addr, void *virt_addr, size_t page_cnt)
 {
         for (size_t i = 0; i < page_cnt; ++i) {
-                mem_page_map_page((void *)((uintptr_t)phys_addr + i * page_size),
-                                  (void *)((uintptr_t)virt_addr + i * page_size));
+                paging_map_page((void *)((uintptr_t)phys_addr + i * page_size),
+                                (void *)((uintptr_t)virt_addr + i * page_size));
         }
 }

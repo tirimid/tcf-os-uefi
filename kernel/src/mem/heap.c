@@ -16,7 +16,7 @@ static struct heap_header *last_hdr;
 static size_t heap_pages;
 static size_t page_size;
 
-void mem_heap_init(size_t _heap_pages, size_t _page_size)
+void heap_init(size_t _heap_pages, size_t _page_size)
 {
         static bool initialized = false;
 
@@ -26,7 +26,7 @@ void mem_heap_init(size_t _heap_pages, size_t _page_size)
         heap_pages = _heap_pages;
         page_size = _page_size;
         
-        heap_ptr = mem_pgalloc_request_pages(heap_pages);
+        heap_ptr = pgalloc_request_pages(heap_pages);
         *heap_ptr = (struct heap_header){
                 .next = NULL,
                 .size = 0,
@@ -49,7 +49,7 @@ static bool is_region_free(const void *ptr, size_t size)
         return true;
 }
 
-void *mem_heap_alloc(size_t size)
+void *heap_alloc(size_t size)
 {
         void *alloc_reg = NULL;
         size_t total_size = size + sizeof(struct heap_header);
@@ -79,7 +79,7 @@ void *mem_heap_alloc(size_t size)
         return (void *)((uintptr_t)alloc_reg + sizeof(struct heap_header));
 }
 
-void mem_heap_free(void *ptr)
+void heap_free(void *ptr)
 {
         struct heap_header *prev_hdr = NULL;
 
@@ -104,7 +104,7 @@ void mem_heap_free(void *ptr)
         prev_hdr->next = prev_hdr->next->next;
 }
 
-void *mem_heap_realloc(void *ptr, size_t new_size)
+void *heap_realloc(void *ptr, size_t new_size)
 {
         struct heap_header *alloc_hdr = NULL;
 
@@ -122,13 +122,13 @@ void *mem_heap_realloc(void *ptr, size_t new_size)
         if (alloc_hdr == NULL || new_size < alloc_hdr->size)
                 return NULL;
 
-        void *new_ptr = mem_heap_alloc(new_size);
+        void *new_ptr = heap_alloc(new_size);
 
         if (new_ptr == NULL)
                 return NULL;
 
         memcpy(new_ptr, alloc_hdr + 1, alloc_hdr->size);
-        mem_heap_free(ptr);
+        heap_free(ptr);
 
         return new_ptr;
 }
