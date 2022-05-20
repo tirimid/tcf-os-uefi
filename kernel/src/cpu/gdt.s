@@ -1,5 +1,5 @@
-        .ifndef _CPU_GDT_S_
-        .equ _CPU_GDT_S_, 1
+        .ifndef CPU_GDT_S__
+        .equ CPU_GDT_S__, 1
 
         .globl gdt_load
 gdt_load:
