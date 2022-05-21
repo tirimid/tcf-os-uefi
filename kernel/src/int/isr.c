@@ -4,6 +4,7 @@
 #include "int/pic.h"
 #include "cpu/io.h"
 #include "kern/error.h"
+#include "io/ps2kb.h"
 
 __attribute__((interrupt)) void isr_default(const struct isr_frame *frame)
 {
@@ -41,5 +42,6 @@ __attribute__((interrupt)) void isr_ps2_keyboard(const struct isr_frame *frame)
 {
         uint8_t scancode = io_read_port_byte(IO_PORT_PS2_DATA);
 
+        ps2kb_handle_input(scancode);
         pic_end_pic1_int();
 }
