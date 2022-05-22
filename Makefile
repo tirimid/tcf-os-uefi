@@ -1,72 +1,70 @@
 .ONESHELL:
 
-BOOTDIR = boot
-BBUILDDIR = $(BOOTDIR)/build
-KERNELDIR = kernel
-KBUILDDIR = $(KERNELDIR)/build
-IMEDDIR = imed
-BUILDDIR = build
-OVMFDIR = ovmf
-OSFILESDIR = os-files
+BOOT_DIR = boot
+B_BUILD_DIR = $(BOOT_DIR)/build
+KERNEL_DIR = kernel
+K_BUILD_DIR = $(KERNEL_DIR)/build
+IMED_DIR = imed
+BUILD_DIR = build
+OVMF_DIR = ovmf
+OS_FILES_DIR = os-files
 
-KERNELELF = kernel.elf
+KERNEL_ELF = kernel.elf
 IMG = tcf-os-uefi.img
 
 EMU = qemu-system-x86_64
 EFLAGS = -cpu qemu64 -m 2G -net none \
-	 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE.fd" \
-	 -drive if=pflash,format=raw,unit=1,file="$(OVMFDIR)/OVMF_VARS.fd"
+	 -drive if=pflash,format=raw,unit=0,file="$(OVMF_DIR)/OVMF_CODE.fd" \
+	 -drive if=pflash,format=raw,unit=1,file="$(OVMF_DIR)/OVMF_VARS.fd"
 
-all:
-	make clean
-	make run
+all: clean run
 	@ echo "target 'all' complete"
 
 clean:
-	cd $(BOOTDIR)
+	cd $(BOOT_DIR)
 	make clean
-	cd ../$(KERNELDIR)
+	cd ../$(KERNEL_DIR)
 	make clean
 	cd ..
-	rm $(IMEDDIR)/* $(BUILDDIR)/*
+	rm -r $(IMED_DIR)/* $(BUILD_DIR)/*
 	@ echo "target 'clean' complete"
 
-build: $(BUILDDIR)/$(IMG)
+build: $(BUILD_DIR)/$(IMG)
 	@ echo "target 'build' complete"
 
-run: $(BUILDDIR)/$(IMG)
+run: $(BUILD_DIR)/$(IMG)
 	$(EMU) $(EFLAGS) -drive file=$^
 	@ echo "target 'run' complete"
 
 # writes necessary OS files to disk image which has only UEFI stuff currently
-$(BUILDDIR)/$(IMG): $(IMEDDIR)/$(IMG) $(IMEDDIR)/$(KERNELELF)
+$(BUILD_DIR)/$(IMG): $(IMED_DIR)/$(IMG) $(IMED_DIR)/$(KERNEL_ELF)
 	cp $< $@
 	mmd -i $@ ::/sys
-	mcopy -i $@ $(OSFILESDIR)/sys/sys.cfg ::/sys
-	mcopy -i $@ $(IMEDDIR)/$(KERNELELF) ::/sys
-	mcopy -i $@ $(OSFILESDIR)/sys/tamsyn-8x16-bold.psf ::/sys
+	mcopy -i $@ $(OS_FILES_DIR)/sys/sys.cfg ::/sys
+	mcopy -i $@ $(IMED_DIR)/$(KERNEL_ELF) ::/sys
+	mcopy -i $@ $(OS_FILES_DIR)/sys/tamsyn-8x16-bold.psf ::/sys
 	mmd -i $@ ::/uefi
-	mcopy -i $@ $(OSFILESDIR)/uefi/test.txt ::/uefi
+	mcopy -i $@ $(OS_FILES_DIR)/uefi/test.txt ::/uefi
 
-$(IMEDDIR)/$(IMG): $(IMEDDIR)/BOOTX64.EFI
+$(IMED_DIR)/$(IMG): $(IMED_DIR)/BOOTX64.EFI
 	dd if=/dev/zero of=$@ bs=1k count=1440
 	mformat -i $@ -f 1440 ::
 	mmd -i $@ ::/EFI
 	mmd -i $@ ::/EFI/BOOT
 	mcopy -i $@ $^ ::/EFI/BOOT
 
-$(IMEDDIR)/BOOTX64.EFI: $(BBUILDDIR)/BOOTX64.EFI
+$(IMED_DIR)/BOOTX64.EFI: $(B_BUILD_DIR)/BOOTX64.EFI
 	cp $^ $@
 
-$(BBUILDDIR)/BOOTX64.EFI:
-	cd $(BOOTDIR)
+$(B_BUILD_DIR)/BOOTX64.EFI:
+	cd $(BOOT_DIR)
 	make build
 	cd ..
 
-$(IMEDDIR)/$(KERNELELF): $(KBUILDDIR)/$(KERNELELF)
+$(IMED_DIR)/$(KERNEL_ELF): $(K_BUILD_DIR)/$(KERNEL_ELF)
 	cp $^ $@
 
-$(KBUILDDIR)/$(KERNELELF):
-	cd $(KERNELDIR)
+$(K_BUILD_DIR)/$(KERNEL_ELF):
+	cd $(KERNEL_DIR)
 	make build
 	cd ..
