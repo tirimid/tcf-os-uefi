@@ -77,11 +77,10 @@ void *ftype_load_elf(EFI_FILE_HANDLE file, enum ftype_elf_header_inst_set inst_s
         struct elf_header elf_hdr;
         file_read(file, &elf_hdr, 0, sizeof(elf_hdr));
 
-        bool hdr_valid = elf_hdr.inst_set == inst_set && elf_hdr.type == type
-                         && memcmp("\x7f" "ELF", (char *)&elf_hdr.magic, 4) == 0;
-        
-        if (!hdr_valid)
+        if (elf_hdr.inst_set != inst_set || elf_hdr.type != type
+            || memcmp("\x7f" "ELF", (char *)&elf_hdr.magic, 4) != 0) {
                 text_log_error(L"read invalid elf header");
+        }
 
         size_t prog_hdrs_size = elf_hdr.prog_hdr_cnt * elf_hdr.prog_hdr_size;
         struct elf_prog_header *prog_hdrs = pool_alloc(prog_hdrs_size);

@@ -40,11 +40,10 @@ void gfx_draw_hollow_rect(const struct gfx_rect *rect, struct gfx_color col)
 {
         for (int i = rect->x; i < rect->x + rect->w; ++i) {
                 for (int j = rect->y; j < rect->y + rect->h; ++j) {
-                        bool should_draw = i == rect->x || i == rect->x + rect->w - 1
-                                           || j == rect->y || j == rect->y + rect->h - 1;
-
-                        if (should_draw)
+                        if (i == rect->x || i == rect->x + rect->w - 1 || j == rect->y
+                            || j == rect->y + rect->h - 1) {
                                 gfx_draw_pixel(i, j, col);
+                        }
                 }
         }
 }

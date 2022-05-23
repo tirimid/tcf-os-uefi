@@ -25,11 +25,10 @@ void pgalloc_init(const struct mem_map *mem_map, size_t _page_size)
                 uintptr_t ent_addr = (uintptr_t)mem_map->map + mem_map->ent_size * i;
                 const struct mem_map_entry *ent = (const struct mem_map_entry *)ent_addr;
 
-                bool larger = ent->type == MEM_MAP_ENTRY_TYPE_CONVENTIONAL
-                              && ent->page_cnt > largest_free_ent->page_cnt;
-
-                if (larger)
+                if (ent->type == MEM_MAP_ENTRY_TYPE_CONVENTIONAL
+                    && ent->page_cnt > largest_free_ent->page_cnt) {
                         largest_free_ent = ent;
+                }
 
                 total_page_cnt += ent->page_cnt;
         }

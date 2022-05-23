@@ -39,11 +39,10 @@ void heap_init(size_t _heap_pages, size_t _page_size)
 static bool is_region_free(const void *ptr, size_t size)
 {
         for (const struct heap_header *hdr = heap_ptr; hdr != NULL; hdr = hdr->next) {
-                bool collision = (uintptr_t)ptr <= (uintptr_t)hdr + sizeof(*hdr) + hdr->size
-                                 && (uintptr_t)ptr + size >= (uintptr_t)hdr;
-
-                if (collision)
+                if ((uintptr_t)ptr <= (uintptr_t)hdr + sizeof(*hdr) + hdr->size
+                    && (uintptr_t)ptr + size >= (uintptr_t)hdr) {
                         return false;
+                }
         }
 
         return true;
@@ -85,10 +84,9 @@ void heap_free(void *ptr)
 
         for (struct heap_header *hdr = heap_ptr; hdr->next != NULL; hdr = hdr->next) {
                 size_t size = sizeof(*hdr->next) + hdr->next->size;
-                bool collision = (uintptr_t)ptr <= (uintptr_t)hdr->next + size
-                                 && (uintptr_t)ptr >= (uintptr_t)hdr->next;
                 
-                if (collision) {
+                if ((uintptr_t)ptr <= (uintptr_t)hdr->next + size
+                    && (uintptr_t)ptr >= (uintptr_t)hdr->next) {
                         prev_hdr = hdr;
                         
                         break;
