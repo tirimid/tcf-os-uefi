@@ -25,11 +25,10 @@ void pgalloc_init(const struct mem_map *mem_map, size_t _page_size)
                 uintptr_t ent_addr = (uintptr_t)mem_map->map + mem_map->ent_size * i;
                 const struct mem_map_entry *ent = (const struct mem_map_entry *)ent_addr;
 
-                bool larger = ent->type == MEM_MAP_ENTRY_TYPE_CONVENTIONAL
-                              && ent->page_cnt > largest_free_ent->page_cnt;
-
-                if (larger)
+                if (ent->type == MEM_MAP_ENTRY_TYPE_CONVENTIONAL
+                    && ent->page_cnt > largest_free_ent->page_cnt) {
                         largest_free_ent = ent;
+                }
 
                 total_page_cnt += ent->page_cnt;
         }
@@ -72,27 +71,20 @@ void *pgalloc_request_page(void)
         return NULL;
 }
 
-static size_t free_pages_at_bit(size_t bit, size_t max_pages)
-{
-        size_t pages = 0;
-
-        for (size_t i = bit; i < page_bm.size_bits && i <= bit + max_pages; ++i) {
-                if (!ds_bitmap_bit(&page_bm, i))
-                        ++pages;
-                else
-                        break;
-        }
-
-        return pages;
-}
-
 void *pgalloc_request_pages(size_t page_cnt)
 {
         for (size_t i = bitmap_ind_start; i < page_bm.size_bits; ++i) {
                 if (ds_bitmap_bit(&page_bm, i))
                         continue;
 
-                size_t free_pages = free_pages_at_bit(i, page_cnt);
+                size_t free_pages = 0;
+
+                for (size_t j = i; j < page_bm.size_bits && j <= i + page_cnt; ++j) {
+                        if (!ds_bitmap_bit(&page_bm, j))
+                                ++free_pages;
+                        else
+                                break;
+                }
 
                 if (free_pages >= page_cnt) {
                         bitmap_ind_start = i + free_pages;
